@@ -7,6 +7,7 @@ import Schedules from '../src/screen/SchedulesListsScreen';
 import SignUp from '../src/screen/SignUp';
 import Calendar from '../src/screen/Date';
 import {connect} from 'react-redux';
+import colors from './config/colors';
 
 const Stack = createStackNavigator();
 
@@ -26,13 +27,26 @@ class Index extends Component {
             <>
               <Stack.Screen
                 name="Home"
-                options={{title: 'Home', headerShown: false}}
+                options={{
+                  title: 'Home',
+                  headerShown: false,
+                }}
                 component={Home}
                 auth={this.props.auth}
               />
               <Stack.Screen
                 name="Schedules"
-                options={{title: 'Schedules'}}
+                options={{
+                  title: 'Schedules',
+                  headerTitleStyle: {
+                    fontSize: 16,
+                    color: colors.WHITE,
+                    fontWeight: 'bold',
+                  },
+                  headerStyle: {
+                    backgroundColor: colors.SECOND_BLUE,
+                  },
+                }}
                 auth={this.props.auth}
                 component={Schedules}
               />

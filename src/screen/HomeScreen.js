@@ -66,8 +66,8 @@ class HomeForm extends Component {
     this.props.loadRoutes();
     this.state = {
       selectedRoute: {},
-      selectedDestination: {},
-      selectedDate: {},
+      selectedDate: '',
+      selectedLabel: '',
       date: {},
       routes: [],
     };
@@ -78,21 +78,30 @@ class HomeForm extends Component {
   //     routes: this.props.routes,
   //   });
   // }
-  componentWillReceiveProps() {
-    if (this.props.route.params) {
-      this.setState({
-        date: this.props.route.params.dateSelected,
-      });
-    }
-  }
+
   componentDidMount() {
     this.setState({
       routes: this.props.routes,
     });
   }
+  componentDidUpdate(prevProps) {
+    if (this.props.route.params !== prevProps.route.params) {
+      // eslint-disable-next-line
+      this.setState({
+        selectedDate: this.props.route.params.dateSelected.dateString,
+      });
+    }
+  }
   Bo = selected => {
+    console.log(selected);
+    const value = selected.Value.split(/\s*\-\s*/g);
+    const data = {
+      origin: value[0],
+      destination: value[1],
+    };
     this.setState({
-      selectedItem: selected,
+      selectedRoute: data,
+      selectedLabel: selected.Name,
     });
   };
 
@@ -100,7 +109,13 @@ class HomeForm extends Component {
     this.props.navigation.navigate('Calendar');
   };
   onSubmit = () => {
-    this.props.navigation.navigate('Schedules');
+    const query = `?origin=${this.state.selectedRoute.origin}&destination=${
+      this.state.selectedRoute.destination
+    }&date=${this.state.selectedDate}`;
+    this.props.navigation.navigate('Schedules', {
+      query,
+      label: this.state.selectedLabel,
+    });
   };
   render() {
     return (

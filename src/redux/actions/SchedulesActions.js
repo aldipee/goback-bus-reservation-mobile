@@ -25,15 +25,16 @@ export const setDate = selectedDate => async dispatch => {
 
 export const loadSchedules = query => async dispatch => {
   try {
-    const urlQuery = `schedules${query}&limit=3&sortBy=time&sort=1`;
+    setLoading();
+    const urlQuery = `schedules${query}&limit=5&sortBy=time&sort=1`;
     // const query = API.API_URL.concat(
     //   'schedules?sortBy=time&date=2020-04-04&sort=1&origin=BDG&destination=SMG',
     // );
 
-    const res = await axios.get(urlQuery);
+    const res = await axios.get(API.API_URL.concat(urlQuery));
     console.log(res);
     dispatch({
-      type: 'LOAD',
+      type: LOAD_SCHEDULES,
       payload: res.data.data,
     });
   } catch (error) {
@@ -48,7 +49,7 @@ export const loadRoutes = () => async dispatch => {
     console.log(res.data.data);
     let routes = res.data.data.map((dest, index) => ({
       Id: index,
-      Value: dest.id,
+      Value: `${dest.origin_code}-${dest.destination_code}`,
       Name: `${dest.origin} (${dest.origin_code}) - ${dest.destination} (${
         dest.destination_code
       })`,
@@ -64,6 +65,6 @@ export const loadRoutes = () => async dispatch => {
 
 export const setLoading = () => {
   return {
-    action: SET_LOADING_SCHEDULES,
+    type: SET_LOADING_SCHEDULES,
   };
 };

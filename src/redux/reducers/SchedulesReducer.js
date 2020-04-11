@@ -7,7 +7,7 @@ import {
 } from '../actions/type';
 const initialState = {
   selectedDate: '',
-  isLoading: '',
+  isLoading: false,
   error: null,
   schedulesData: [],
   singleScheduleData: {},
@@ -16,7 +16,7 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case 'LOAD': {
+    case LOAD_SCHEDULES: {
       return {
         ...state,
         isLoading: false,
