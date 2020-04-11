@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {Card, Button, Header, Text as Txt} from 'react-native-elements';
-import {Picker} from '@react-native-community/picker';
 import PickerModal from 'react-native-picker-modal-view';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {connect} from 'react-redux';
+import {loadRoutes} from '../redux/actions/SchedulesActions';
 // import style from '../style/index';
 import colors from '../config/colors';
 
@@ -18,6 +18,8 @@ const localStyle = StyleSheet.create({
     backgroundColor: colors.MAIN_BLUE,
     justifyContent: 'space-around',
     marginTop: -30,
+    height: 200,
+    borderRadius: 24,
   },
   searchSection: {
     flex: 1,
@@ -47,106 +49,120 @@ const localStyle = StyleSheet.create({
     color: 'rgba(0,0,0,0.3)',
     fontWeight: 'bold',
   },
+  date: {
+    fontSize: 14,
+    marginBottom: 20,
+    padding: 10,
+    fontWeight: 'bold',
+  },
+  cardContainer: {
+    marginTop: -140,
+  },
 });
 
-class Profile extends Component {
-  state = {
-    selectedRoute: {},
-    selectedDestination: {},
-    selectedDate: {},
-  };
+class HomeForm extends Component {
+  constructor(props) {
+    super(props);
+    this.props.loadRoutes();
+    this.state = {
+      selectedRoute: {},
+      selectedDestination: {},
+      selectedDate: {},
+      date: {},
+      routes: [],
+    };
+  }
 
+  // componentWillMount() {
+  //   this.setState({
+  //     routes: this.props.routes,
+  //   });
+  // }
+  componentWillReceiveProps() {
+    if (this.props.route.params) {
+      this.setState({
+        date: this.props.route.params.dateSelected,
+      });
+    }
+  }
+  componentDidMount() {
+    this.setState({
+      routes: this.props.routes,
+    });
+  }
   Bo = selected => {
     this.setState({
       selectedItem: selected,
     });
   };
 
+  showCalendar = () => {
+    this.props.navigation.navigate('Calendar');
+  };
   onSubmit = () => {
     this.props.navigation.navigate('Schedules');
   };
   render() {
-    const list = [
-      {
-        Name: 'Åland Islands',
-        Value: 'Åland Islands',
-        Code: 'AX',
-        Id: 1,
-      },
-      {
-        Name: 'Albania',
-        Value: 'Albania',
-        Code: 'AL',
-        Id: 2,
-      },
-      {
-        Name: 'Algeria',
-        Value: 'Algeria',
-        Code: 'DZ',
-        Id: 3,
-      },
-      {
-        Name: 'American Samoa',
-        Value: 'American Samoa',
-        Code: 'AS',
-        Id: 4,
-      },
-      {
-        Name: 'AndorrA',
-        Value: 'AndorrA',
-        Code: 'AD',
-        Id: 5,
-      },
-    ];
     return (
       <View>
         <Header containerStyle={localStyle.headerContainer} />
-        <View>
-          <Card title="HELLO WORLD">
+        <View style={localStyle.cardContainer}>
+          <Card
+            title="Pick Your Trip!"
+            containerStyle={{
+              borderTopWidth: 0,
+              borderRightWidth: 0,
+              borderLeftWidth: 0,
+              borderBottomWidth: 0,
+              borderRadius: 5,
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.8,
+              shadowRadius: 2,
+            }}>
             <View>
               <Txt style={localStyle.label}>Origin</Txt>
-              <PickerModal
-                style={localStyle.input}
-                onSelected={selected => this.Bo(selected)}
-                onRequestClosed={() => console.warn('closed...')}
-                onBackRequest={() => console.warn('back key pressed')}
-                items={list}
-                sortingLanguage={'tr'}
-                showToTopButton={true}
-                defaultSelected={this.state.selectedItem}
-                autoCorrect={false}
-                autoGenerateAlphabet={true}
-                chooseText={'Choose one'}
-                searchText={'Search...'}
-                forceSelect={false}
-                autoSort={true}
-              />
+              {console.log('heee', this.props.routes)}
+              {this.props.routes && this.props.routes.length !== 0 && (
+                <PickerModal
+                  style={localStyle.input}
+                  onSelected={selected => this.Bo(selected)}
+                  onRequestClosed={() => console.warn('closed...')}
+                  onBackRequest={() => console.warn('back key pressed')}
+                  items={
+                    typeof this.props.routes == 'object'
+                      ? (() => {
+                          console.log('aaa', this.props.routes);
+                          return this.props.routes;
+                        })()
+                      : []
+                  }
+                  sortingLanguage={'tr'}
+                  showToTopButton={true}
+                  defaultSelected={this.state.selectedItem}
+                  autoCorrect={false}
+                  autoGenerateAlphabet={true}
+                  chooseText={'Choose one'}
+                  searchText={'Search...'}
+                  forceSelect={false}
+                  autoSort={true}
+                />
+              )}
             </View>
+
             <View>
-              <Txt style={localStyle.label}>Destination</Txt>
-              <PickerModal
-                onSelected={selected => this.Bo(selected)}
-                onRequestClosed={() => console.warn('closed...')}
-                onBackRequest={() => console.warn('back key pressed')}
-                items={list}
-                sortingLanguage={'tr'}
-                showToTopButton={true}
-                defaultSelected={this.state.selectedItem}
-                autoCorrect={false}
-                autoGenerateAlphabet={true}
-                chooseText={'Choose one'}
-                searchText={'Search...'}
-                forceSelect={false}
-                autoSort={true}
-              />
-            </View>
-            <View />
-            <View>
-              <Picker />
+              <Txt style={localStyle.label}>Date</Txt>
+              <TouchableOpacity onPress={this.showCalendar}>
+                <Text style={localStyle.date}>
+                  {this.props.route.params
+                    ? this.props.route.params.dateSelected.dateString
+                    : 'Select Date'}
+                </Text>
+              </TouchableOpacity>
             </View>
             <Button
               icon={{name: 'search', color: '#fff'}}
-              backgroundColor={colors.MAIN_BLUE}
+              backgroundColor={colors.ORANGE}
               buttonStyle={localStyle.button}
               title="Search "
               onPress={this.onSubmit}
@@ -157,4 +173,14 @@ class Profile extends Component {
     );
   }
 }
-export default Profile;
+
+const mapStateToProps = state => ({
+  routes: state.schedulesData.routes,
+});
+
+const mapDispatchToProps = {loadRoutes};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HomeForm);

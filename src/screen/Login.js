@@ -6,6 +6,9 @@ import FormTextInput from '../components/TextInput';
 import strings from '../config/strings';
 import styles from '../style/index';
 import colors from '../config/colors';
+import AsyncStorage from '@react-native-community/async-storage';
+import {setLogin} from '../redux/actions/AuthActions';
+import {connect} from 'react-redux';
 
 const localStyles = StyleSheet.create({
   formContainer: {
@@ -35,12 +38,29 @@ const localStyles = StyleSheet.create({
   },
 });
 
-export default class Login extends Component {
+class Login extends Component {
+  state = {
+    username: '',
+    password: '',
+  };
+  componentDidMount() {
+    AsyncStorage.getItem('token', (err, result) => {
+      if (result) {
+        console.log('HEREEEEE', result);
+      }
+    });
+  }
   toRegister = () => {
     this.props.navigation.navigate('SignUp');
   };
   toHome = () => {
-    this.props.navigation.navigate('Home');
+    const data = {
+      username: this.state.username,
+      password: this.state.password,
+    };
+    const s = this.props.setLogin(data);
+    console.log('dddddd', s);
+    // this.props.navigation.navigate('Home');
   };
   render() {
     return (
@@ -48,11 +68,17 @@ export default class Login extends Component {
         <View style={localStyles.formContainer}>
           <View style={localStyles.con}>
             <Icon name="user" size={23} style={localStyles.icon} />
-            <FormTextInput placeholder={strings.EMAIL_PLACEHOLDER} />
+            <FormTextInput
+              onChangeText={text => this.setState({username: text})}
+              placeholder={strings.EMAIL_PLACEHOLDER}
+            />
           </View>
           <View style={localStyles.con}>
             <Icon name="lock" size={23} style={localStyles.icon} />
-            <FormTextInput placeholder={strings.PASSWORD_PLACEHOLDER} />
+            <FormTextInput
+              onChangeText={text => this.setState({password: text})}
+              placeholder={strings.PASSWORD_PLACEHOLDER}
+            />
           </View>
           <Button
             label={strings.LOGIN}
@@ -66,3 +92,8 @@ export default class Login extends Component {
     );
   }
 }
+const mapDispatchToProps = {setLogin};
+export default connect(
+  null,
+  mapDispatchToProps,
+)(Login);

@@ -4,21 +4,6 @@ import {Card, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import colors from '../config/colors';
 
-const list = [
-  {
-    name: 'Amy Farha',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Chris Jackson',
-    avatar_url:
-      'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman',
-  },
-];
-
 const localStyle = StyleSheet.create({
   title: {
     color: colors.MAIN_GREY,
@@ -57,7 +42,6 @@ const localStyle = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-const items = new Array(1);
 
 export default class History extends Component {
   render() {

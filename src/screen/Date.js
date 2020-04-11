@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text, SafeAreaView} from 'react-native';
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import {Calendar} from 'react-native-calendars';
+import {connect} from 'react-redux';
+import {setDate} from '../redux/actions/SchedulesActions';
 
-export default class Date extends Component {
+class Date extends Component {
+  state = {
+    selectedDate: '',
+  };
   render() {
     return (
       <Calendar
@@ -14,7 +18,9 @@ export default class Date extends Component {
         maxDate={'2020-09-09'}
         // Handler which gets executed on day press. Default = undefined
         onDayPress={day => {
-          console.log('selected day', day);
+          console.log('day Presss day', day);
+
+          this.props.navigation.navigate('home', {dateSelected: day});
         }}
         // Handler which gets executed on day long press. Default = undefined
         onDayLongPress={day => {
@@ -51,3 +57,14 @@ export default class Date extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  data: state.schedulesData,
+});
+
+const mapDispatchToProps = {setDate};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Date);

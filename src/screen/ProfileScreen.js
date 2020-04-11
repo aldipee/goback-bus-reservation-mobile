@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {View, SafeAreaView, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {Header, Avatar} from 'react-native-elements';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import colors from '../config/colors';
+import {connect} from 'react-redux';
+import {setLogout} from '../redux/actions/AuthActions';
 
-const Tab = createMaterialTopTabNavigator();
+import colors from '../config/colors';
 
 const localStyle = StyleSheet.create({
   header: {
@@ -18,7 +18,11 @@ const localStyle = StyleSheet.create({
   },
 });
 
-export default class ProfileScreen extends Component {
+class ProfileScreen extends Component {
+  logout = () => {
+    this.props.setLogout();
+    this.props.navigation.navigate('Home');
+  };
   render() {
     return (
       <View>
@@ -38,7 +42,15 @@ export default class ProfileScreen extends Component {
           />
         </View>
         <View style={localStyle.info} />
+        <TouchableOpacity onPress={this.logout}>
+          <Text>Logout</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 }
+
+export default connect(
+  null,
+  {setLogout},
+)(ProfileScreen);

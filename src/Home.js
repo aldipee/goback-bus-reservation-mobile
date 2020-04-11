@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import React from 'react';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Feather';
