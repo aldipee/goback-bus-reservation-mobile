@@ -26,7 +26,7 @@ export const setDate = selectedDate => async dispatch => {
 export const loadSchedules = query => async dispatch => {
   try {
     setLoading();
-    const urlQuery = `schedules${query}&limit=5&sortBy=time&sort=1`;
+    const urlQuery = `schedules${query}&limit=4&sortBy=time&sort=1`;
     // const query = API.API_URL.concat(
     //   'schedules?sortBy=time&date=2020-04-04&sort=1&origin=BDG&destination=SMG',
     // );
@@ -35,7 +35,7 @@ export const loadSchedules = query => async dispatch => {
     console.log(res);
     dispatch({
       type: LOAD_SCHEDULES,
-      payload: res.data.data,
+      payload: {data: res.data.data, pageInfo: res.data.page},
     });
   } catch (error) {
     console.log('DODO', error.message);

@@ -5,9 +5,10 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  FlatList,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {Card, Button} from 'react-native-elements';
+import {Card} from 'react-native-elements';
 import {loadSchedules} from '../redux/actions/SchedulesActions';
 import {tConvert, convertToRupiah} from '../utils/convert';
 
@@ -67,21 +68,40 @@ const localStyle = StyleSheet.create({
 });
 
 class HomeSchedules extends Component {
-  // onPress = () => {
-  //   this.props.navigator.navigate('profilePage');
-  // };
   constructor(props) {
     super(props);
-  }
-  componentDidMount() {
+    this.state = {
+      data: [],
+    };
     this.props.loadSchedules(this.props.route.params.query);
-    this.props.navigation.setOptions({title: this.props.route.params.label});
   }
+  // fetchDataFromProps = () => {
+  //   return new Promise((resolve, reject) => {
+  //     if (this.props.data.schedulesData) {
+  //       resolve(this.props.data.schedulesData);
+  //     } else {
+  //       reject('Error Not Data found');
+  //     }
+  //   });
+  // };
+  componentDidMount() {
+    this.props.navigation.setOptions({title: this.props.route.params.label});
+    setTimeout(() => {
+      // const data = await this.fetchDataFromProps();
+      const data = this.props.data.schedulesData;
+      this.setState({data});
+    }, 200);
+  }
+
+  onLoadMore = page => {
+    const query = this.props.route.params.query.concat(`&page=${page}`);
+    this.props.loadSchedules(query);
+  };
 
   render() {
     const items =
-      this.props.data.schedulesData &&
-      this.props.data.schedulesData.map((data, index) => {
+      this.state.data &&
+      this.state.data.map((data, index) => {
         return (
           <TouchableOpacity>
             <Card containerStyle={{borderRadius: 3}}>
@@ -115,7 +135,7 @@ class HomeSchedules extends Component {
       });
     return (
       <ScrollView>
-        <View>{!this.props.data.isLoading ? items : <Text>Holla</Text>}</View>
+        <View>{this.state.data ? items : <Text>Holla</Text>}</View>
       </ScrollView>
     );
   }

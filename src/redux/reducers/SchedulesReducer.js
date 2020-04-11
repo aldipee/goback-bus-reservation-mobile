@@ -12,6 +12,7 @@ const initialState = {
   schedulesData: [],
   singleScheduleData: {},
   routes: [],
+  pageInfo: {},
 };
 
 export default function(state = initialState, action) {
@@ -20,7 +21,8 @@ export default function(state = initialState, action) {
       return {
         ...state,
         isLoading: false,
-        schedulesData: action.payload,
+        schedulesData: action.payload.data,
+        pageInfo: action.payload.pageInfo,
       };
     }
     case UPDATE_CALENDAR_TO_STATE: {
