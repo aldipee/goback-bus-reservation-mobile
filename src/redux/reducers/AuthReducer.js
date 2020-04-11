@@ -3,6 +3,7 @@ import {
   SET_LOGIN,
   ERROR_LOGIN,
   SET_LOGOUT,
+  SET_SIGN_UP,
 } from '../actions/type';
 const initialState = {
   isLogin: false,
@@ -10,6 +11,8 @@ const initialState = {
   isLoading: false,
   data: [],
   token: null,
+  requestDone: false,
+  isProfileComplete: false,
 };
 
 export default function(state = initialState, {type, payload}) {
@@ -18,8 +21,8 @@ export default function(state = initialState, {type, payload}) {
       return {
         ...state,
         isLogin: true,
-
-        data: payload,
+        isProfileComplete: payload.isProfileCompleted,
+        data: payload.token,
       };
     }
     case SET_LOADING_AUTH: {
@@ -32,6 +35,12 @@ export default function(state = initialState, {type, payload}) {
       return {
         ...state,
         isLogin: false,
+      };
+    }
+    case SET_SIGN_UP: {
+      return {
+        ...state,
+        requestDone: true,
       };
     }
     default:

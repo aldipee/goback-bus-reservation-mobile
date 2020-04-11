@@ -1,4 +1,10 @@
-import {ERROR_LOGIN, SET_LOGIN, SET_LOADING_AUTH, SET_LOGOUT} from './type';
+import {
+  ERROR_LOGIN,
+  SET_LOGIN,
+  SET_LOADING_AUTH,
+  SET_LOGOUT,
+  SET_SIGN_UP,
+} from './type';
 import {API} from '../../config/server';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -10,7 +16,10 @@ export const setLogin = data => async dispatch => {
       await AsyncStorage.setItem('token', res.data.token);
       dispatch({
         type: SET_LOGIN,
-        payload: res.data.token,
+        payload: {
+          token: res.data.token,
+          isProfileCompleted: res.data.isProfileCompleted,
+        },
       });
       return true;
     } else {
@@ -28,6 +37,24 @@ export const setLogout = () => {
     type: SET_LOGOUT,
   };
 };
+
+export const setNewUser = data => async dispatch => {
+  try {
+    setLoading();
+    const res = await axios.post(API.API_URL.concat('auth/register'), data);
+    console.log(res);
+    if (res.data) {
+      dispatch({
+        type: SET_SIGN_UP,
+      });
+    } else {
+      console.log('Sign Up Failed');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // export const setLogin = data => {
 //   axios
 //     .post(API.API_URL.concat('auth/login'), data)

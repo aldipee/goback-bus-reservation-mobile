@@ -10,34 +10,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {setLogin} from '../redux/actions/AuthActions';
 import {connect} from 'react-redux';
 
-const localStyles = StyleSheet.create({
-  formContainer: {
-    flex: 1,
-    width: '90%',
-    marginTop: '50%',
-  },
-  form: {
-    marginTop: 50,
-  },
-  or: {
-    textAlign: 'center',
-    textTransform: 'uppercase',
-    marginTop: -6,
-    marginBottom: 4,
-    color: colors.MAIN_GREY,
-    fontWeight: '200',
-  },
-  icon: {
-    position: 'absolute',
-    top: 8,
-    left: 2,
-  },
-  con: {
-    position: 'relative',
-    marginTop: 10,
-  },
-});
-
 class Login extends Component {
   state = {
     username: '',
@@ -64,34 +36,83 @@ class Login extends Component {
   };
   render() {
     return (
-      <View style={styles.parent}>
-        <View style={localStyles.formContainer}>
-          <View style={localStyles.con}>
-            <Icon name="user" size={23} style={localStyles.icon} />
-            <FormTextInput
-              onChangeText={text => this.setState({username: text})}
-              placeholder={strings.EMAIL_PLACEHOLDER}
+      <>
+        <Text>Welcome back!</Text>
+        <View style={styles.parent}>
+          <View style={localStyles.formContainer}>
+            <View style={localStyles.con}>
+              <Icon
+                name="user"
+                color={colors.SECOND_BLUE}
+                size={23}
+                style={localStyles.icon}
+              />
+              <FormTextInput
+                onChangeText={text => this.setState({username: text})}
+                placeholder={strings.EMAIL_PLACEHOLDER}
+              />
+            </View>
+            <View style={localStyles.con}>
+              <Icon
+                name="lock"
+                color={colors.SECOND_BLUE}
+                size={23}
+                style={localStyles.icon}
+              />
+              <FormTextInput
+                onChangeText={text => this.setState({password: text})}
+                placeholder={strings.PASSWORD_PLACEHOLDER}
+              />
+            </View>
+            <View>
+              <Text style={localStyles.forgot}>Forgot password?</Text>
+            </View>
+            <Button
+              label={strings.LOGIN}
+              buttonType="login"
+              onPress={this.toHome}
             />
+            <Text style={localStyles.or}>Don't have an account yet?</Text>
+            <Button label={strings.REGISTER} onPress={this.toRegister} />
           </View>
-          <View style={localStyles.con}>
-            <Icon name="lock" size={23} style={localStyles.icon} />
-            <FormTextInput
-              onChangeText={text => this.setState({password: text})}
-              placeholder={strings.PASSWORD_PLACEHOLDER}
-            />
-          </View>
-          <Button
-            label={strings.LOGIN}
-            buttonType="login"
-            onPress={this.toHome}
-          />
-          <Text style={localStyles.or}>Or</Text>
-          <Button label={strings.REGISTER} onPress={this.toRegister} />
         </View>
-      </View>
+      </>
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  formContainer: {
+    flex: 1,
+    width: '90%',
+    marginTop: '50%',
+  },
+  forgot: {
+    marginLeft: 210,
+    marginTop: -17,
+    marginBottom: 20,
+    color: colors.DODGER_BLUE,
+  },
+  form: {
+    marginTop: 50,
+  },
+  or: {
+    textAlign: 'center',
+    marginTop: 30,
+    marginBottom: 9,
+    color: colors.MAIN_GREY,
+    fontWeight: '200',
+  },
+  icon: {
+    position: 'absolute',
+    top: 13,
+    left: 7,
+  },
+  con: {
+    position: 'relative',
+    marginTop: 7,
+  },
+});
 const mapDispatchToProps = {setLogin};
 export default connect(
   null,

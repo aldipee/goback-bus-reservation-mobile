@@ -17,12 +17,20 @@ class Index extends Component {
       <NavigationContainer>
         <Stack.Navigator>
           {this.props.auth && !this.props.auth.isLogin ? (
-            <Stack.Screen
-              name="LoginScreen"
-              options={{title: 'Login', headerShown: false}}
-              component={Login}
-              auth={this.props.auth}
-            />
+            <>
+              <Stack.Screen
+                name="LoginScreen"
+                options={{title: 'Login', headerShown: false}}
+                component={Login}
+                auth={this.props.auth}
+              />
+              <Stack.Screen
+                name="SignUp"
+                options={{title: 'SignUp', headerShown: false}}
+                auth={this.props.auth}
+                component={SignUp}
+              />
+            </>
           ) : (
             <>
               <Stack.Screen
@@ -55,13 +63,6 @@ class Index extends Component {
                 options={{title: 'Home', headerShown: false}}
                 component={Calendar}
                 auth={this.props.auth}
-              />
-
-              <Stack.Screen
-                name="SignUp"
-                options={{title: 'SignUp', headerShown: false}}
-                auth={this.props.auth}
-                component={SignUp}
               />
             </>
           )}

@@ -84,6 +84,12 @@ class HomeSchedules extends Component {
   //     }
   //   });
   // };
+  componentDidUpdate(prevProps) {
+    if (prevProps.data.schedulesData !== this.props.data.schedulesData) {
+      const data = [...this.state.data, ...this.props.data.schedulesData];
+      this.setState({data});
+    }
+  }
   componentDidMount() {
     this.props.navigation.setOptions({title: this.props.route.params.label});
     setTimeout(() => {
@@ -93,50 +99,65 @@ class HomeSchedules extends Component {
     }, 200);
   }
 
-  onLoadMore = page => {
-    const query = this.props.route.params.query.concat(`&page=${page}`);
+  onLoadMore = () => {
+    const query = this.props.route.params.query.concat(
+      `&page=${this.props.data.pageInfo + 1}`,
+    );
     this.props.loadSchedules(query);
+    console.log('Jalan BRO');
   };
 
   render() {
-    const items =
-      this.state.data &&
-      this.state.data.map((data, index) => {
-        return (
-          <TouchableOpacity>
-            <Card containerStyle={{borderRadius: 3}}>
-              <View style={localStyle.fix}>
-                <Text style={localStyle.busTitle}>{data.agent}</Text>
-                <Text style={localStyle.price}>
-                  {convertToRupiah(data.price)}
-                </Text>
-              </View>
-              <View style={localStyle.schedule}>
-                <View style={localStyle.fixTransport}>
-                  <Text style={localStyle.time}>{tConvert(data.time)}</Text>
-                  <Text style={localStyle.busName}>{data.bus_name}</Text>
-                </View>
-                <View style={localStyle.fixTransport}>
-                  <Text style={localStyle.durations}>6h 0m</Text>
-                </View>
-                <View style={localStyle.fixTransport}>
-                  <Text style={localStyle.time}>4:30 PM</Text>
-                  <Text style={localStyle.busName}>{data.bus_name}</Text>
-                </View>
-              </View>
-              <View style={localStyle.container}>
-                <Text style={localStyle.seats}>
-                  {data.seatsAvaiable.length} seats left!
-                </Text>
-              </View>
-            </Card>
-          </TouchableOpacity>
-        );
-      });
+    // const items =
+    //   this.state.data &&
+    //   this.state.data.map((data, index) => {
+    //     return (
+
+    //     );
+    //   });
     return (
-      <ScrollView>
-        <View>{this.state.data ? items : <Text>Holla</Text>}</View>
-      </ScrollView>
+      // <ScrollView>
+      //   <View>{this.state.data ? items : <Text>Holla</Text>}</View>
+      // </ScrollView>
+      <>
+        {this.state.data && (
+          <FlatList
+            onEndReached={this.onLoadMore}
+            onEndReachedThreshold={0.2}
+            data={this.state.data}
+            renderItem={({item}) => (
+              <TouchableOpacity>
+                <Card containerStyle={{borderRadius: 3}}>
+                  <View style={localStyle.fix}>
+                    <Text style={localStyle.busTitle}>{item.agent}</Text>
+                    <Text style={localStyle.price}>
+                      {convertToRupiah(item.price)}
+                    </Text>
+                  </View>
+                  <View style={localStyle.schedule}>
+                    <View style={localStyle.fixTransport}>
+                      <Text style={localStyle.time}>{tConvert(item.time)}</Text>
+                      <Text style={localStyle.busName}>{item.bus_name}</Text>
+                    </View>
+                    <View style={localStyle.fixTransport}>
+                      <Text style={localStyle.durations}>6h 0m</Text>
+                    </View>
+                    <View style={localStyle.fixTransport}>
+                      <Text style={localStyle.time}>4:30 PM</Text>
+                      <Text style={localStyle.busName}>{item.bus_name}</Text>
+                    </View>
+                  </View>
+                  <View style={localStyle.container}>
+                    <Text style={localStyle.seats}>
+                      {item.seatsAvaiable.length} seats left!
+                    </Text>
+                  </View>
+                </Card>
+              </TouchableOpacity>
+            )}
+          />
+        )}
+      </>
     );
   }
 }

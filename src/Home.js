@@ -6,6 +6,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './screen/HomeScreen';
 import ProfileScreen from './screen/ProfileScreen';
 import HistoryScreen from './screen/History';
+import MyOrder from './screen/MyOrder';
+import IconHistory from 'react-native-vector-icons/AntDesign';
 
 const BottomTab = createBottomTabNavigator();
 export default function Home() {
@@ -20,15 +22,15 @@ export default function Home() {
         options={{
           tabBarLabel: 'History',
           tabBarIcon: ({color, size}) => (
-            <Ionicons name="ios-paper" size={size} color={color} />
+            <IconHistory name="linechart" size={size} color={color} />
           ),
         }}
       />
       <BottomTab.Screen
         name="order"
-        component={HistoryScreen}
+        component={MyOrder}
         options={{
-          tabBarLabel: 'My Order',
+          tabBarLabel: 'My Booking',
           tabBarIcon: ({color, size}) => (
             <Ionicons name="ios-paper" size={size} color={color} />
           ),
