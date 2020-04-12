@@ -3,6 +3,7 @@ import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {Card, Button, Header, Text as Txt} from 'react-native-elements';
 import PickerModal from 'react-native-picker-modal-view';
 import {connect} from 'react-redux';
+import {converDate} from '../utils/convert';
 import {loadRoutes} from '../redux/actions/SchedulesActions';
 // import style from '../style/index';
 import colors from '../config/colors';
@@ -170,7 +171,9 @@ class HomeForm extends Component {
               <TouchableOpacity onPress={this.showCalendar}>
                 <Text style={localStyle.date}>
                   {this.props.route.params
-                    ? this.props.route.params.dateSelected.dateString
+                    ? converDate(
+                        this.props.route.params.dateSelected.dateString,
+                      )
                     : 'Select Date'}
                 </Text>
               </TouchableOpacity>

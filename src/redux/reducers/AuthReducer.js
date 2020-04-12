@@ -4,6 +4,7 @@ import {
   ERROR_LOGIN,
   SET_LOGOUT,
   SET_SIGN_UP,
+  PROFILE_DATA_COMPLETE,
 } from '../actions/type';
 const initialState = {
   isLogin: false,
@@ -41,6 +42,13 @@ export default function(state = initialState, {type, payload}) {
       return {
         ...state,
         requestDone: true,
+      };
+    }
+    case PROFILE_DATA_COMPLETE: {
+      return {
+        ...state,
+        isLoading: false,
+        isProfileComplete: true,
       };
     }
     default:

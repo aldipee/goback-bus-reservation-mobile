@@ -1,7 +1,17 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text, ScrollView, SafeAreaView} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native';
 import {Card, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {connect} from 'react-redux';
+import {loadUserHistory} from '../redux/actions/UserActions';
+import {converDate, convertToRupiah} from '../utils/convert';
 import colors from '../config/colors';
 
 const localStyle = StyleSheet.create({
@@ -41,9 +51,21 @@ const localStyle = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
   },
+  date: {
+    fontSize: 15,
+    marginLeft: 15,
+    fontWeight: 'bold',
+  },
 });
 
-export default class History extends Component {
+class History extends Component {
+  componentDidMount() {
+    this.props.loadUserHistory();
+  }
+
+  showDetails = data => {
+    this.props.navigation.navigate('HistoryDetails', {data});
+  };
   render() {
     return (
       <SafeAreaView>
@@ -58,125 +80,66 @@ export default class History extends Component {
         />
         <ScrollView>
           <View>
-            <Card
-              containerStyle={{
-                backgroundColor: colors.WHITE,
-                borderRadius: 3,
-                borderRightWidth: 0,
-                borderLeftWidth: 0,
-                borderTopWidth: 0,
-                borderBottomWidth: 0,
-                paddingLeft: 0,
-                paddingRight: 0,
-              }}
-              bottomDivider>
-              <View style={localStyle.fixJustify}>
-                <Text style={localStyle.title}>Booking ID #000291</Text>
-                <Text style={localStyle.price}>Rp 222.825</Text>
-              </View>
-              <View style={localStyle.fix}>
-                <Icon
-                  name="md-bus"
-                  size={28}
-                  color={colors.ORANGE}
-                  style={localStyle.icon}
-                />
-                <Text style={localStyle.route}>Yogyakarta - Bandung</Text>
-              </View>
-              <View>
-                <Text style={localStyle.status}> Purchase Successful!</Text>
-              </View>
-            </Card>
-            <Card
-              containerStyle={{
-                backgroundColor: colors.WHITE,
-                borderRadius: 3,
-                borderRightWidth: 0,
-                borderLeftWidth: 0,
-                borderTopWidth: 0,
-                borderBottomWidth: 0,
-                paddingLeft: 0,
-                paddingRight: 0,
-              }}
-              bottomDivider>
-              <View style={localStyle.fixJustify}>
-                <Text style={localStyle.title}>Booking ID #000291</Text>
-                <Text style={localStyle.price}>Rp 222.825</Text>
-              </View>
-              <View style={localStyle.fix}>
-                <Icon
-                  name="md-bus"
-                  size={28}
-                  color={colors.ORANGE}
-                  style={localStyle.icon}
-                />
-                <Text style={localStyle.route}>Yogyakarta - Bandung</Text>
-              </View>
-              <View>
-                <Text style={localStyle.status}> Purchase Successful!</Text>
-              </View>
-            </Card>
-            <Card
-              containerStyle={{
-                backgroundColor: colors.WHITE,
-                borderRadius: 3,
-                borderRightWidth: 0,
-                borderLeftWidth: 0,
-                borderTopWidth: 0,
-                borderBottomWidth: 0,
-                paddingLeft: 0,
-                paddingRight: 0,
-              }}
-              bottomDivider>
-              <View style={localStyle.fixJustify}>
-                <Text style={localStyle.title}>Booking ID #000291</Text>
-                <Text style={localStyle.price}>Rp 222.825</Text>
-              </View>
-              <View style={localStyle.fix}>
-                <Icon
-                  name="md-bus"
-                  size={28}
-                  color={colors.ORANGE}
-                  style={localStyle.icon}
-                />
-                <Text style={localStyle.route}>Yogyakarta - Bandung</Text>
-              </View>
-              <View>
-                <Text style={localStyle.status}> Purchase Successful!</Text>
-              </View>
-            </Card>
-            <Card
-              containerStyle={{
-                backgroundColor: colors.WHITE,
-                borderRadius: 3,
-                borderRightWidth: 0,
-                borderLeftWidth: 0,
-                borderTopWidth: 0,
-                borderBottomWidth: 0,
-                paddingLeft: 0,
-                paddingRight: 0,
-              }}
-              bottomDivider>
-              <View style={localStyle.fixJustify}>
-                <Text style={localStyle.title}>Booking ID #000291</Text>
-                <Text style={localStyle.price}>Rp 222.825</Text>
-              </View>
-              <View style={localStyle.fix}>
-                <Icon
-                  name="md-bus"
-                  size={28}
-                  color={colors.ORANGE}
-                  style={localStyle.icon}
-                />
-                <Text style={localStyle.route}>Yogyakarta - Bandung</Text>
-              </View>
-              <View>
-                <Text style={localStyle.status}> Purchase Successful!</Text>
-              </View>
-            </Card>
+            {this.props.history &&
+              this.props.history.map((data, index) => (
+                <TouchableOpacity onPress={() => this.showDetails(data)}>
+                  <Card
+                    containerStyle={{
+                      backgroundColor: colors.WHITE,
+                      borderRadius: 3,
+                      borderRightWidth: 0,
+                      borderLeftWidth: 0,
+                      borderTopWidth: 0,
+                      borderBottomWidth: 0,
+                      paddingLeft: 0,
+                      paddingRight: 0,
+                    }}
+                    bottomDivider>
+                    <Text style={localStyle.date}>
+                      {converDate(data.schedule_date)}
+                    </Text>
+                    <View style={localStyle.fixJustify}>
+                      <Text style={localStyle.title}>
+                        Booking ID #{data.reservation_id}
+                      </Text>
+                      <Text style={localStyle.price}>
+                        {convertToRupiah(data.totalPrice)}
+                      </Text>
+                    </View>
+                    <View style={localStyle.fix}>
+                      <Icon
+                        name="md-bus"
+                        size={28}
+                        color={colors.ORANGE}
+                        style={localStyle.icon}
+                      />
+                      <Text style={localStyle.route}>
+                        {data.origin} - {data.destination}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={localStyle.status}>
+                        {' '}
+                        Purchase Successful!
+                      </Text>
+                    </View>
+                  </Card>
+                </TouchableOpacity>
+              ))}
           </View>
         </ScrollView>
       </SafeAreaView>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    history: state.userData.history,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  {loadUserHistory},
+)(History);

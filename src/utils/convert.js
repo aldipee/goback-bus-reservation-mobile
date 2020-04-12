@@ -39,5 +39,5 @@ export function convertToAngka(rupiah) {
 
 export function converDate(date) {
   var d = new Date(date);
-  return d.toISOString().substring(0, 10);
+  return d.toUTCString().substring(0, 17);
 }

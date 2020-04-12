@@ -4,30 +4,43 @@ import {
   SET_LOADING_AUTH,
   SET_LOGOUT,
   SET_SIGN_UP,
+  PROFILE_DATA_COMPLETE,
 } from './type';
 import {API} from '../../config/server';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import {ToastAndroid, Platform} from 'react-native';
+AsyncStorage.getItem('token', (err, result) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${result}`;
+});
 
 export const setLogin = data => async dispatch => {
   try {
     const res = await axios.post(API.API_URL.concat('auth/login'), data);
-    if (res.data.token) {
-      await AsyncStorage.setItem('token', res.data.token);
-      dispatch({
-        type: SET_LOGIN,
-        payload: {
-          token: res.data.token,
-          isProfileCompleted: res.data.isProfileCompleted,
-        },
-      });
-      return true;
+    console.log(res.data);
+    if (res.data.status === 'NOTVERIFIED') {
+      ToastAndroid.show(
+        'Please verified your account first!',
+        ToastAndroid.SHORT,
+      );
     } else {
-      console.log('LOFFFI');
-      return false;
+      if (res.data.token) {
+        await AsyncStorage.setItem('token', res.data.token);
+        dispatch({
+          type: SET_LOGIN,
+          payload: {
+            token: res.data.token,
+            isProfileCompleted: res.data.isProfileCompleted,
+          },
+        });
+        return true;
+      } else {
+        console.log('LOFFFI');
+        return false;
+      }
     }
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 };
 
@@ -53,6 +66,77 @@ export const setNewUser = data => async dispatch => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const setProfileUser = data => async dispatch => {
+  try {
+    setLoading();
+    console.log(data);
+    // const dataUser = createFormData(data.photo, {
+    //   fullName: data.fullName,
+    //   bod: data.bod,
+    //   gender: data.gender,
+    //   phoneNumber: data.phoneNumber,
+    //   address: data.fullAddress,
+    // });
+    const formData = new FormData();
+    // formData.append('avatart', {
+    //   uri: data.photo.uri,
+    //   type: 'image/jpg',
+    //   filename: data.photo.fileName,
+    // });
+    let photo = {
+      uri: data.photo.uri,
+      type: 'image/jpg',
+      name: data.photo.fileName,
+    };
+    console.log(photo, 'Here from picture');
+    formData.append('avatart', photo);
+    formData.append('fullName', data.fullName);
+    formData.append('bod', data.bod);
+    formData.append('gender', data.gender);
+    formData.append('phoneNumber', data.phoneNumber);
+    formData.append('address', data.fullAddress);
+    console.log(formData);
+    const res = await axios.post(API.API_URL.concat('users/update'), formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    // const res = await axios.post(API.API_URL.concat('users/update'), formData, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data',
+    //   },
+    // });
+    console.log(res, 'this response from setProfileUser');
+    if (res.data.success) {
+      dispatch({
+        type: PROFILE_DATA_COMPLETE,
+      });
+      alert('Your data now is completed!');
+    } else {
+      console.log(res);
+    }
+  } catch (error) {
+    console.error(error, 'aDa error');
+  }
+};
+
+const createFormData = (photo, body) => {
+  const data = new FormData();
+
+  data.append('avatart', {
+    name: photo.fileName,
+    type: 'image/jpeg',
+    uri:
+      Platform.OS === 'android' ? photo.uri : photo.uri.replace('file://', ''),
+  });
+
+  Object.keys(body).forEach(key => {
+    data.append(key, body[key]);
+  });
+
+  return data;
 };
 
 // export const setLogin = data => {

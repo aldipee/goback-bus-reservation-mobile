@@ -5,7 +5,11 @@ import Home from '../src/Home';
 import Login from '../src/screen/Login';
 import Schedules from '../src/screen/SchedulesListsScreen';
 import SignUp from '../src/screen/SignUp';
+import CompleteProfile from '../src/screen/CompleteProfile';
+import SecondForm from './screen/SecondForm';
 import Calendar from '../src/screen/Date';
+import HistoryDetails from '../src/screen/HistoryDetails';
+import ScheduleDetails from '../src/screen/ScheduleDetails';
 import {connect} from 'react-redux';
 import colors from './config/colors';
 
@@ -22,12 +26,10 @@ class Index extends Component {
                 name="LoginScreen"
                 options={{title: 'Login', headerShown: false}}
                 component={Login}
-                auth={this.props.auth}
               />
               <Stack.Screen
                 name="SignUp"
                 options={{title: 'SignUp', headerShown: false}}
-                auth={this.props.auth}
                 component={SignUp}
               />
             </>
@@ -39,8 +41,26 @@ class Index extends Component {
                   title: 'Home',
                   headerShown: false,
                 }}
-                component={Home}
+                component={
+                  this.props.auth.isProfileComplete ? Home : CompleteProfile
+                }
                 auth={this.props.auth}
+              />
+              <Stack.Screen
+                name="SecondForm"
+                options={{
+                  title: 'Upload your picture',
+                  headerTitleStyle: {
+                    fontSize: 19,
+                    color: colors.WHITE,
+                    fontWeight: 'bold',
+                  },
+                  headerStyle: {
+                    backgroundColor: colors.SECOND_BLUE,
+                  },
+                }}
+                auth={this.props.auth}
+                component={SecondForm}
               />
               <Stack.Screen
                 name="Schedules"
@@ -57,6 +77,37 @@ class Index extends Component {
                 }}
                 auth={this.props.auth}
                 component={Schedules}
+              />
+              <Stack.Screen
+                name="ScheduleDetails"
+                options={{
+                  title: 'Schedule Details',
+                  headerTitleStyle: {
+                    fontSize: 16,
+                    color: colors.WHITE,
+                    fontWeight: 'bold',
+                  },
+                  headerStyle: {
+                    backgroundColor: colors.SECOND_BLUE,
+                  },
+                }}
+                component={ScheduleDetails}
+              />
+              <Stack.Screen
+                name="HistoryDetails"
+                options={{
+                  title: 'History Details',
+                  headerTitleStyle: {
+                    fontSize: 16,
+                    color: colors.WHITE,
+                    fontWeight: 'bold',
+                  },
+                  headerStyle: {
+                    backgroundColor: colors.SECOND_BLUE,
+                  },
+                }}
+                auth={this.props.auth}
+                component={HistoryDetails}
               />
               <Stack.Screen
                 name="Calendar"

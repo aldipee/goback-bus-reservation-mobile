@@ -2,6 +2,10 @@
   package="com.awesomeproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- This is my custom for using upload image -->
+    <uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<!-- This is the end -->
 
     <application
       android:name=".MainApplication"

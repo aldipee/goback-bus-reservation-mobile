@@ -90,6 +90,9 @@ class HomeSchedules extends Component {
       this.setState({data});
     }
   }
+  scheduleDetails = data => {
+    this.props.navigation.navigate('ScheduleDetails', {data});
+  };
   componentDidMount() {
     this.props.navigation.setOptions({title: this.props.route.params.label});
     setTimeout(() => {
@@ -126,7 +129,7 @@ class HomeSchedules extends Component {
             onEndReachedThreshold={0.2}
             data={this.state.data}
             renderItem={({item}) => (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => this.scheduleDetails(item)}>
                 <Card containerStyle={{borderRadius: 3}}>
                   <View style={localStyle.fix}>
                     <Text style={localStyle.busTitle}>{item.agent}</Text>
