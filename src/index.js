@@ -10,6 +10,8 @@ import SecondForm from './screen/SecondForm';
 import Calendar from '../src/screen/Date';
 import HistoryDetails from '../src/screen/HistoryDetails';
 import ScheduleDetails from '../src/screen/ScheduleDetails';
+import SelectSeat from '../src/screen/SelectSeat';
+import confirmPurchase from '../src/screen/confirmPurchase';
 import {connect} from 'react-redux';
 import colors from './config/colors';
 
@@ -61,6 +63,20 @@ class Index extends Component {
                 }}
                 auth={this.props.auth}
                 component={SecondForm}
+              />
+              <Stack.Screen
+                name="SelectSeat"
+                options={{
+                  title: 'Home',
+                }}
+                component={SelectSeat}
+              />
+              <Stack.Screen
+                name="confirmPurchase"
+                options={{
+                  title: 'Home',
+                }}
+                component={confirmPurchase}
               />
               <Stack.Screen
                 name="Schedules"

@@ -9,9 +9,16 @@ import {API} from '../../config/server';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import {ToastAndroid, Platform} from 'react-native';
-AsyncStorage.getItem('token', (err, result) => {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${result}`;
-});
+
+const setToken = () => async dispatch => {
+  try {
+    const result = await AsyncStorage.getItem('token');
+    console.log(result, 'LASTEST TOKEN');
+    axios.defaults.headers.common['Authorization'] = `Bearer ${result}`;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const loadUserData = () => async dispatch => {
   try {
@@ -32,8 +39,9 @@ export const loadUserData = () => async dispatch => {
 
 export const loadUserHistory = () => async dispatch => {
   try {
+    setToken();
     setLoading();
-    const query = 'users/history?show=history';
+    const query = 'users/history';
     const res = await axios.get(API.API_URL.concat(query));
     if (res.data.status === 'OK') {
       dispatch({

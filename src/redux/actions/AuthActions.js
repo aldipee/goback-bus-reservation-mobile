@@ -10,6 +10,7 @@ import {API} from '../../config/server';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import {ToastAndroid, Platform} from 'react-native';
+import {Buffer} from 'buffer';
 AsyncStorage.getItem('token', (err, result) => {
   axios.defaults.headers.common['Authorization'] = `Bearer ${result}`;
 });
@@ -17,6 +18,7 @@ AsyncStorage.getItem('token', (err, result) => {
 export const setLogin = data => async dispatch => {
   try {
     const res = await axios.post(API.API_URL.concat('auth/login'), data);
+    await AsyncStorage.removeItem('token');
     console.log(res.data);
     if (res.data.status === 'NOTVERIFIED') {
       ToastAndroid.show(
@@ -45,7 +47,10 @@ export const setLogin = data => async dispatch => {
 };
 
 export const setLogout = () => {
-  AsyncStorage.removeItem('token');
+  AsyncStorage.removeItem('token', err => {
+    console.log(err, 'ERROR DELETE TOKEN');
+  });
+
   return {
     type: SET_LOGOUT,
   };
@@ -86,12 +91,14 @@ export const setProfileUser = data => async dispatch => {
     //   filename: data.photo.fileName,
     // });
     let photo = {
-      uri: data.photo.uri,
+      uri: data.photo.data,
       type: 'image/jpg',
       name: data.photo.fileName,
     };
-    console.log(photo, 'Here from picture');
-    formData.append('avatart', photo);
+    const byteCharacters = Buffer.from(data.photo.data, 'base64');
+
+    console.log(data.photo, 'Here from picture');
+    formData.append('avatart', byteCharacters);
     formData.append('fullName', data.fullName);
     formData.append('bod', data.bod);
     formData.append('gender', data.gender);

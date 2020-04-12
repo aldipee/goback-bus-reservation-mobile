@@ -30,8 +30,8 @@ class Login extends Component {
       username: this.state.username,
       password: this.state.password,
     };
-    const s = this.props.setLogin(data);
-    console.log('dddddd', s);
+    this.props.setLogin(data);
+
     // this.props.navigation.navigate('Home');
   };
   render() {

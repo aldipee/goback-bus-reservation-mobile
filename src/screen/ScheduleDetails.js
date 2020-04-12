@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Text, ScrollView, SafeAreaView} from 'react-native';
-import {Card, Header} from 'react-native-elements';
+import {Card, Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
-import IconBarcode from 'react-native-vector-icons/FontAwesome';
 import {loadUserHistory} from '../redux/actions/UserActions';
 import {converDate, convertToRupiah, tConvert} from '../utils/convert';
 import colors from '../config/colors';
@@ -37,7 +36,7 @@ const localStyle = StyleSheet.create({
   status: {
     marginLeft: 12,
     fontSize: 12,
-    color: colors.GREEN,
+    color: colors.ORANGE,
     marginTop: 10,
     fontWeight: 'bold',
   },
@@ -55,6 +54,11 @@ const localStyle = StyleSheet.create({
 });
 
 class ScheduleDetails extends Component {
+  goToSelectSeat = () => {
+    this.props.navigation.navigate('SelectSeat', {
+      data: this.props.route.params.data,
+    });
+  };
   render() {
     const {data} = this.props.route.params;
     return (
@@ -148,7 +152,9 @@ class ScheduleDetails extends Component {
               </View>
               <Text style={localStyle.date}>{converDate(data.date)}</Text>
               <View style={localStyle.fixJustify}>
-                <Text style={localStyle.title} />
+                <Text style={localStyle.title}>
+                  Boarding Time : {tConvert(data.time)}
+                </Text>
                 <Text style={localStyle.price}>
                   {convertToRupiah(data.price)}
                 </Text>
@@ -161,11 +167,20 @@ class ScheduleDetails extends Component {
                   style={localStyle.icon}
                 />
                 <Text style={localStyle.route}>
-                  {data.origin} - {data.destination}
+                  {data.origin} ({data.origin_code}) - {data.destination} (
+                  {data.destination_code})
                 </Text>
               </View>
-              <View>
-                <Text style={localStyle.status}> Purchase Successful!</Text>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text style={localStyle.status}>
+                  {data.seatsAvaiable.length} seats avaiable
+                </Text>
+                <Button
+                  title="Book now"
+                  containerStyle={{marginRight: 6}}
+                  onPress={this.goToSelectSeat}
+                />
               </View>
             </Card>
           </View>

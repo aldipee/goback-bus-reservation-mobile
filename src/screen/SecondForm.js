@@ -51,7 +51,12 @@ class SecondForm extends Component {
   };
   handleUpload = () => {
     const options = {
-      noData: true,
+      title: 'Select Avatar',
+      customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
     };
     ImagePicker.launchImageLibrary(options, response => {
       if (response.uri) {
