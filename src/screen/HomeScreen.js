@@ -2,9 +2,12 @@ import React, {Component} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {Card, Button, Header, Text as Txt} from 'react-native-elements';
 import PickerModal from 'react-native-picker-modal-view';
+import {convertToRupiah} from '../utils/convert';
 import {connect} from 'react-redux';
 import {converDate} from '../utils/convert';
 import {loadRoutes} from '../redux/actions/SchedulesActions';
+import {loadUserData} from '../redux/actions/UserActions';
+import Icon from 'react-native-vector-icons/Ionicons';
 // import style from '../style/index';
 import colors from '../config/colors';
 
@@ -119,12 +122,49 @@ class HomeForm extends Component {
     });
   };
   render() {
+    const {singleData} = this.props.userData;
     return (
       <View>
         <Header containerStyle={localStyle.headerContainer} />
         <View style={localStyle.cardContainer}>
           <Card
-            title="Pick Your Trip!"
+            containerStyle={{
+              borderTopWidth: 0,
+              borderRightWidth: 0,
+              borderLeftWidth: 0,
+              borderBottomWidth: 0,
+              borderRadius: 5,
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.8,
+              shadowRadius: 2,
+            }}>
+            <View>
+              <Text
+                style={{
+                  fontSize: 12,
+                  textTransform: 'uppercase',
+                  color: colors.MAIN_GREY,
+                }}>
+                Your balance
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={{fontSize: 23, fontWeight: 'bold'}}>
+                  {convertToRupiah(singleData.balance)}
+                </Text>
+                <Button
+                  icon={<Icon name="md-wallet" size={20} color="#fff" />}
+                  title="Top up"
+                />
+              </View>
+            </View>
+          </Card>
+          <Card
+            title={`Pick up your trip ${singleData.fullName}!`}
             containerStyle={{
               borderTopWidth: 0,
               borderRightWidth: 0,
@@ -194,9 +234,10 @@ class HomeForm extends Component {
 
 const mapStateToProps = state => ({
   routes: state.schedulesData.routes,
+  userData: state.userData,
 });
 
-const mapDispatchToProps = {loadRoutes};
+const mapDispatchToProps = {loadRoutes, loadUserData};
 
 export default connect(
   mapStateToProps,

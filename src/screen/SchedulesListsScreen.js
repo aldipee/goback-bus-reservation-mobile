@@ -1,14 +1,9 @@
 import React, {Component} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ScrollView,
-  FlatList,
-} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet, FlatList} from 'react-native';
 import {connect} from 'react-redux';
 import {Card} from 'react-native-elements';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import colors from '../config/colors';
 import {loadSchedules} from '../redux/actions/SchedulesActions';
 import {tConvert, convertToRupiah} from '../utils/convert';
 
@@ -72,6 +67,7 @@ class HomeSchedules extends Component {
     super(props);
     this.state = {
       data: [],
+      isLoading: true,
     };
     this.props.loadSchedules(this.props.route.params.query);
   }
@@ -98,7 +94,7 @@ class HomeSchedules extends Component {
     setTimeout(() => {
       // const data = await this.fetchDataFromProps();
       const data = this.props.data.schedulesData;
-      this.setState({data});
+      this.setState({data, isLoading: false});
     }, 200);
   }
 
@@ -111,6 +107,40 @@ class HomeSchedules extends Component {
   };
 
   render() {
+    const placeholderItems = Array.from(Array(3).keys());
+    const placeholder = placeholderItems.map((data, index) => (
+      <Card
+        containerStyle={{
+          backgroundColor: colors.WHITE,
+          borderRadius: 3,
+          borderRightWidth: 0,
+          borderLeftWidth: 0,
+          borderTopWidth: 0,
+          borderBottomWidth: 0,
+          paddingLeft: 0,
+          paddingRight: 0,
+        }}>
+        <SkeletonPlaceholder>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{width: '100%', height: 100, borderRadius: 50}} />
+            <View style={{marginLeft: 20}}>
+              <View
+                style={{marginTop: 6, width: 80, height: 20, borderRadius: 4}}
+              />
+              <View
+                style={{width: 280, height: 20, borderRadius: 4, marginTop: 10}}
+              />
+              <View
+                style={{marginTop: 10, width: 280, height: 20, borderRadius: 4}}
+              />
+              <View
+                style={{marginTop: 10, width: 280, height: 20, borderRadius: 4}}
+              />
+            </View>
+          </View>
+        </SkeletonPlaceholder>
+      </Card>
+    ));
     // const items =
     //   this.state.data &&
     //   this.state.data.map((data, index) => {
@@ -123,7 +153,7 @@ class HomeSchedules extends Component {
       //   <View>{this.state.data ? items : <Text>Holla</Text>}</View>
       // </ScrollView>
       <>
-        {this.state.data && (
+        {this.state.data ? (
           <FlatList
             onEndReached={this.onLoadMore}
             onEndReachedThreshold={0.2}
@@ -159,6 +189,8 @@ class HomeSchedules extends Component {
               </TouchableOpacity>
             )}
           />
+        ) : (
+          placeholder
         )}
       </>
     );

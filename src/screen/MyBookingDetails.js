@@ -7,6 +7,7 @@ import IconBarcode from 'react-native-vector-icons/FontAwesome';
 import {loadUserHistory} from '../redux/actions/UserActions';
 import {converDate, convertToRupiah, tConvert} from '../utils/convert';
 import colors from '../config/colors';
+import MyBooking from './MyBooking';
 
 const localStyle = StyleSheet.create({
   title: {
@@ -54,7 +55,7 @@ const localStyle = StyleSheet.create({
   },
 });
 
-class HistoryDetails extends Component {
+class MyBookingDetails extends Component {
   render() {
     const {data} = this.props.route.params;
     return (
@@ -187,7 +188,7 @@ class HistoryDetails extends Component {
                 </Text>
               </View>
               <View>
-                <Text style={localStyle.status}> Trip Completed</Text>
+                <Text style={localStyle.status}> Waiting to check-in</Text>
               </View>
             </Card>
           </View>
@@ -206,4 +207,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   {loadUserHistory},
-)(HistoryDetails);
+)(MyBookingDetails);

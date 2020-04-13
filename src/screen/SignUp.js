@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+import {StyleSheet, View, Text, TouchableOpacity, Alert} from 'react-native';
+import Input from '../components/Input';
 import Button from '../components/Button';
-import FormTextInput from '../components/TextInput';
 import strings from '../config/strings';
 import styles from '../style/index';
 import colors from '../config/colors';
-import {setNewUser} from '../redux/actions/AuthActions';
+import {setNewUser, checkUsername} from '../redux/actions/AuthActions';
 import {connect} from 'react-redux';
 
 class SignUp extends Component {
@@ -15,10 +14,32 @@ class SignUp extends Component {
     email: '',
     password: '',
     confirmPassword: '',
+    error: null,
+    emailError: null,
   };
   componentDidMount() {}
   toRegister = () => {
     this.props.navigation.navigate('SignUp');
+  };
+  checkemail = () => {
+    let req = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    console.log(req.test(this.state.email));
+    if (!req.test(this.state.email)) {
+      this.setState({emailError: 'Email is invalid!'});
+    } else {
+      this.setState({emailError: null});
+    }
+  };
+  checkUser = () => {
+    console.log(this.state.username);
+    this.props.checkUsername(this.state.username, success => {
+      console.log('IS ', success);
+      if (!success) {
+        this.setState({error: 'Username already exist!'});
+      } else {
+        this.setState({error: null});
+      }
+    });
   };
   SignUp = () => {
     const data = {
@@ -26,9 +47,15 @@ class SignUp extends Component {
       username: this.state.username,
       password: this.state.password,
     };
-    const s = this.props.setNewUser(data);
-    console.log('dddddd', s);
-    // this.props.navigation.navigate('Home');
+    this.props.setNewUser(data, success => {
+      if (success) {
+        this.props.navigation.navigate('SuccessRegis', {
+          username: this.state.username,
+        });
+      } else {
+        Alert.alert('Registration failed, please try again later');
+      }
+    });
   };
   render() {
     return (
@@ -37,56 +64,44 @@ class SignUp extends Component {
         <View style={styles.parent}>
           <View style={localStyles.formContainer}>
             <View style={localStyles.con}>
-              <Icon
-                name="user"
-                color={colors.SECOND_BLUE}
-                size={23}
-                style={localStyles.icon}
-              />
-              <FormTextInput
+              <Input
+                autoFocus={true}
+                onBlur={() => this.checkUser()}
+                placeholder="Pick Username"
+                label="Username"
+                icon="user"
                 onChangeText={text => this.setState({username: text.trim()})}
-                placeholder={strings.USERNAME_PLACEHOLDER}
+                errorMessage={this.state.error ? this.state.error : false}
               />
-            </View>
-            <View style={localStyles.con}>
-              <Icon
-                name="user"
-                color={colors.SECOND_BLUE}
-                size={23}
-                style={localStyles.icon}
-              />
-              <FormTextInput
-                onChangeText={text => this.setState({email: text.trim()})}
+              <Input
                 placeholder={strings.EMAIL_PLACEHOLDER}
+                label="Email"
+                icon="mail"
+                onChangeText={text => this.setState({email: text.trim()})}
+                onBlur={() => this.checkemail()}
+                errorMessage={
+                  !this.state.emailError ? false : 'Email not valid'
+                }
               />
-            </View>
-            <View style={localStyles.con}>
-              <Icon
-                name="lock"
-                color={colors.SECOND_BLUE}
-                size={23}
-                style={localStyles.icon}
-              />
-              <FormTextInput
-                onChangeText={text => this.setState({password: text.trim()})}
+              <Input
                 placeholder={strings.PASSWORD_PLACEHOLDER}
+                label="Password "
+                icon="lock"
+                rightIcon="eye"
+                rightIconContainerStyle={{marginRight: 12}}
+                onChangeText={text => this.setState({password: text.trim()})}
               />
-            </View>
-            <View style={localStyles.con}>
-              <Icon
-                name="lock"
-                color={colors.SECOND_BLUE}
-                size={23}
-                style={localStyles.icon}
-              />
-              <FormTextInput
+              <Input
+                placeholder={strings.CONFIRM_PASSWORD}
+                label="Confirm password "
+                icon="lock"
+                rightIcon="eye"
+                rightIconContainerStyle={{marginRight: 12}}
                 onChangeText={text =>
                   this.setState({confirmPassword: text.trim()})
                 }
-                placeholder={strings.CONFIRM_PASSWORD}
               />
             </View>
-
             <Button
               label={strings.SIGN_UP}
               buttonType="login"
@@ -135,7 +150,7 @@ const localStyles = StyleSheet.create({
     marginTop: 7,
   },
 });
-const mapDispatchToProps = {setNewUser};
+const mapDispatchToProps = {setNewUser, checkUsername};
 export default connect(
   null,
   mapDispatchToProps,

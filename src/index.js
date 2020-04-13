@@ -14,6 +14,8 @@ import SelectSeat from '../src/screen/SelectSeat';
 import confirmPurchase from '../src/screen/confirmPurchase';
 import {connect} from 'react-redux';
 import colors from './config/colors';
+import MyBookingDetails from './screen/MyBookingDetails';
+import SuccessRegis from './screen/SuccesRegis';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +35,14 @@ class Index extends Component {
                 name="SignUp"
                 options={{title: 'SignUp', headerShown: false}}
                 component={SignUp}
+              />
+              <Stack.Screen
+                name="SuccessRegis"
+                options={{
+                  title: 'Booking Details',
+                  headerShown: false,
+                }}
+                component={SuccessRegis}
               />
             </>
           ) : (
@@ -109,6 +119,23 @@ class Index extends Component {
                 }}
                 component={ScheduleDetails}
               />
+              <Stack.Screen
+                name="MyBookingDetails"
+                options={{
+                  title: 'Booking Details',
+                  headerTitleStyle: {
+                    fontSize: 16,
+                    color: colors.WHITE,
+                    fontWeight: 'bold',
+                  },
+                  headerStyle: {
+                    backgroundColor: colors.SECOND_BLUE,
+                  },
+                }}
+                auth={this.props.auth}
+                component={MyBookingDetails}
+              />
+
               <Stack.Screen
                 name="HistoryDetails"
                 options={{

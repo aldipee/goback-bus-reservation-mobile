@@ -37,6 +37,7 @@ export const setLogin = data => async dispatch => {
         });
         return true;
       } else {
+        ToastAndroid.show('Wrong email or password', ToastAndroid.SHORT);
         console.log('LOFFFI');
         return false;
       }
@@ -56,16 +57,18 @@ export const setLogout = () => {
   };
 };
 
-export const setNewUser = data => async dispatch => {
+export const setNewUser = (data, callback) => async dispatch => {
   try {
     setLoading();
     const res = await axios.post(API.API_URL.concat('auth/register'), data);
     console.log(res);
     if (res.data) {
+      callback(true);
       dispatch({
         type: SET_SIGN_UP,
       });
     } else {
+      callback(false);
       console.log('Sign Up Failed');
     }
   } catch (error) {
@@ -172,6 +175,25 @@ export const setError = err => {
     type: ERROR_LOGIN,
     payload: err,
   };
+};
+
+export const checkUsername = (username, callback) => async dispatch => {
+  try {
+    const data = {username};
+    const res = await axios.post(
+      API.API_URL.concat('auth/check-username'),
+      data,
+    );
+    console.log(res, 'SSSS');
+    if (res.data.status === 'OK') {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  } catch (error) {
+    console.log(error);
+    callback('ERROR');
+  }
 };
 
 export const loginFailed = code => {

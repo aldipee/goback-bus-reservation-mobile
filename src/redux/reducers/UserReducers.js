@@ -3,6 +3,7 @@ import {
   USER_PROFILE_DATA,
   USER_HISTORY,
   ERROR_USER,
+  MY_BOOKING,
 } from '../actions/type';
 
 const initState = {
@@ -10,6 +11,7 @@ const initState = {
   isLoading: false,
   history: [],
   error: null,
+  myBooking: [],
 };
 
 export default function(state = initState, action) {
@@ -34,6 +36,12 @@ export default function(state = initState, action) {
         ...state,
         history: action.payload,
         isLoading: false,
+      };
+    }
+    case MY_BOOKING: {
+      return {
+        ...state,
+        myBooking: action.payload,
       };
     }
     case ERROR_USER: {

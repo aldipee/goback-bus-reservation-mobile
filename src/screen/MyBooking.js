@@ -7,12 +7,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import {Card, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import {loadUserHistory} from '../redux/actions/UserActions';
+import {loadMybooking} from '../redux/actions/UserActions';
 import {converDate, convertToRupiah} from '../utils/convert';
 import colors from '../config/colors';
 
@@ -45,7 +46,7 @@ const localStyle = StyleSheet.create({
   status: {
     marginLeft: 12,
     fontSize: 12,
-    backgroundColor: colors.GREEN,
+    backgroundColor: colors.ORANGE,
     color: colors.WHITE,
     width: 95,
     marginTop: 10,
@@ -64,28 +65,26 @@ const localStyle = StyleSheet.create({
   },
 });
 
-class History extends Component {
+class MyBooking extends Component {
   constructor(props) {
     super(props);
-    this.props.loadUserHistory();
+    this.props.loadMybooking();
   }
 
   state = {
     history: [],
     isLoading: true,
   };
-
   onRefresh = () => {
-    this.props.loadUserHistory();
+    this.props.loadMybooking();
     this.setState({
       history: this.props.history,
       isLoading: true,
     });
     setTimeout(() => {
       this.setState({
-        history: this.props.history,
-        isLoading: false,
         refreshing: false,
+        isLoading: false,
       });
     }, 2000);
   };
@@ -99,7 +98,7 @@ class History extends Component {
   }
 
   showDetails = data => {
-    this.props.navigation.navigate('HistoryDetails', {data});
+    this.props.navigation.navigate('MyBookingDetails', {data});
   };
   render() {
     const placeholderItems = Array.from(Array(3).keys());
@@ -196,7 +195,7 @@ class History extends Component {
                         </Text>
                       </View>
                       <View>
-                        <Text style={localStyle.status}> Trip Completed</Text>
+                        <Text style={localStyle.status}>Wait to check-in</Text>
                       </View>
                     </Card>
                   </TouchableOpacity>
@@ -211,11 +210,11 @@ class History extends Component {
 
 const mapStateToProps = state => {
   return {
-    history: state.userData.history,
+    history: state.userData.myBooking,
   };
 };
 
 export default connect(
   mapStateToProps,
-  {loadUserHistory},
-)(History);
+  {loadMybooking},
+)(MyBooking);

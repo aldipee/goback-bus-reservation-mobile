@@ -2,6 +2,7 @@ import {
   USER_HISTORY,
   USER_PROFILE_DATA,
   ERROR_USER,
+  MY_BOOKING,
   SET_LOADING_USER_DATA,
   DATA_NOT_FOUND_HISTORY_USER,
 } from './type';
@@ -9,7 +10,9 @@ import {API} from '../../config/server';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import {ToastAndroid, Platform} from 'react-native';
-
+AsyncStorage.getItem('token', (err, result) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${result}`;
+});
 const setToken = () => async dispatch => {
   try {
     const result = await AsyncStorage.getItem('token');
@@ -55,6 +58,26 @@ export const loadUserHistory = () => async dispatch => {
     }
   } catch (error) {
     console.log(error.message);
+  }
+};
+export const loadMybooking = () => async dispatch => {
+  try {
+    setToken();
+    setLoading();
+    const query = 'users/history';
+    const res = await axios.get(API.API_URL.concat(query));
+    if (res.data.status === 'OK') {
+      dispatch({
+        type: MY_BOOKING,
+        payload: res.data.yourBooking,
+      });
+    } else {
+      dispatch({
+        type: DATA_NOT_FOUND_HISTORY_USER,
+      });
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 
