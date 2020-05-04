@@ -142,7 +142,7 @@ class MyBooking extends Component {
           containerStyle={{marginTop: -25}}
           leftComponent={{icon: 'menu', color: '#fff'}}
           centerComponent={{
-            text: 'Reservations History',
+            text: 'My Tickets',
             style: {color: '#fff', fontWeight: 'bold', fontSize: 16},
           }}
         />
@@ -157,49 +157,67 @@ class MyBooking extends Component {
             placeholder
           ) : (
             <View>
-              {this.state.history &&
-                this.state.history.map((data, index) => (
-                  <TouchableOpacity onPress={() => this.showDetails(data)}>
-                    <Card
-                      containerStyle={{
-                        backgroundColor: colors.WHITE,
-                        borderRadius: 3,
-                        borderRightWidth: 0,
-                        borderLeftWidth: 0,
-                        borderTopWidth: 0,
-                        borderBottomWidth: 0,
-                        paddingLeft: 0,
-                        paddingRight: 0,
-                      }}
-                      bottomDivider>
-                      <Text style={localStyle.date}>
-                        {converDate(data.schedule_date)}
-                      </Text>
-                      <View style={localStyle.fixJustify}>
-                        <Text style={localStyle.title}>
-                          Booking ID #{data.reservation_id}
-                        </Text>
-                        <Text style={localStyle.price}>
-                          {convertToRupiah(data.totalPrice)}
-                        </Text>
-                      </View>
-                      <View style={localStyle.fix}>
-                        <Icon
-                          name="md-bus"
-                          size={28}
-                          color={colors.ORANGE}
-                          style={localStyle.icon}
-                        />
-                        <Text style={localStyle.route}>
-                          {data.origin} - {data.destination}
-                        </Text>
-                      </View>
-                      <View>
-                        <Text style={localStyle.status}>Wait to check-in</Text>
-                      </View>
-                    </Card>
-                  </TouchableOpacity>
-                ))}
+              {this.state.history ? (
+                <View>
+                  {this.state.history &&
+                    this.state.history.map((data, index) => (
+                      <TouchableOpacity onPress={() => this.showDetails(data)}>
+                        <Card
+                          containerStyle={{
+                            backgroundColor: colors.WHITE,
+                            borderRadius: 3,
+                            borderRightWidth: 0,
+                            borderLeftWidth: 0,
+                            borderTopWidth: 0,
+                            borderBottomWidth: 0,
+                            paddingLeft: 0,
+                            paddingRight: 0,
+                          }}
+                          bottomDivider>
+                          <Text style={localStyle.date}>
+                            {converDate(data.schedule_date)}
+                          </Text>
+                          <View style={localStyle.fixJustify}>
+                            <Text style={localStyle.title}>
+                              Booking ID #{data.reservation_id}
+                            </Text>
+                            <Text style={localStyle.price}>
+                              {convertToRupiah(data.totalPrice)}
+                            </Text>
+                          </View>
+                          <View style={localStyle.fix}>
+                            <Icon
+                              name="md-bus"
+                              size={28}
+                              color={colors.ORANGE}
+                              style={localStyle.icon}
+                            />
+                            <Text style={localStyle.route}>
+                              {data.origin} - {data.destination}
+                            </Text>
+                          </View>
+                          <View>
+                            <Text style={localStyle.status}>
+                              Wait to check-in
+                            </Text>
+                          </View>
+                        </Card>
+                      </TouchableOpacity>
+                    ))}
+                </View>
+              ) : (
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    color: colors.MAIN_GREY,
+                    textTransform: 'uppercase',
+                    marginTop: '40%',
+                    marginLeft: '20%',
+                  }}>
+                  There is no activity
+                </Text>
+              )}
             </View>
           )}
         </ScrollView>

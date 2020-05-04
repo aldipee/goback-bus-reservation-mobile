@@ -16,6 +16,8 @@ import {connect} from 'react-redux';
 import colors from './config/colors';
 import MyBookingDetails from './screen/MyBookingDetails';
 import SuccessRegis from './screen/SuccesRegis';
+import TopUp from './screen/TopUp';
+import SecondSignUp from './screen/SecondSignUp';
 
 const Stack = createStackNavigator();
 
@@ -52,6 +54,7 @@ class Index extends Component {
                 options={{
                   title: 'Home',
                   headerShown: false,
+                  headerTintColor: 'blue',
                 }}
                 component={
                   this.props.auth.isProfileComplete ? Home : CompleteProfile
@@ -59,7 +62,21 @@ class Index extends Component {
                 auth={this.props.auth}
               />
               <Stack.Screen
+                name="TopUp"
+                options={{
+                  title: 'Top Up',
+                }}
+                component={TopUp}
+              />
+              <Stack.Screen
                 name="SecondForm"
+                options={{
+                  title: 'Upload Picture',
+                }}
+                component={SecondSignUp}
+              />
+              <Stack.Screen
+                name="UploadImage"
                 options={{
                   title: 'Upload your picture',
                   headerTitleStyle: {
@@ -71,20 +88,19 @@ class Index extends Component {
                     backgroundColor: colors.SECOND_BLUE,
                   },
                 }}
-                auth={this.props.auth}
                 component={SecondForm}
               />
               <Stack.Screen
                 name="SelectSeat"
                 options={{
-                  title: 'Home',
+                  title: 'Select Seat',
                 }}
                 component={SelectSeat}
               />
               <Stack.Screen
                 name="confirmPurchase"
                 options={{
-                  title: 'Home',
+                  title: 'Confirm Purchase',
                 }}
                 component={confirmPurchase}
               />
@@ -94,14 +110,10 @@ class Index extends Component {
                   title: 'Schedules',
                   headerTitleStyle: {
                     fontSize: 16,
-                    color: colors.WHITE,
+                    color: colors.BLACK,
                     fontWeight: 'bold',
                   },
-                  headerStyle: {
-                    backgroundColor: colors.SECOND_BLUE,
-                  },
                 }}
-                auth={this.props.auth}
                 component={Schedules}
               />
               <Stack.Screen
@@ -154,7 +166,7 @@ class Index extends Component {
               />
               <Stack.Screen
                 name="Calendar"
-                options={{title: 'Home', headerShown: false}}
+                options={{title: 'Select Date'}}
                 component={Calendar}
                 auth={this.props.auth}
               />

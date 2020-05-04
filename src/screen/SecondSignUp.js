@@ -5,21 +5,18 @@ import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {setProfileUser} from '../redux/actions/AuthActions';
+import {ToastAndroid} from 'react-native';
 import colors from '../config/colors';
 
 const localStyle = StyleSheet.create({
   header: {
-    backgroundColor: colors.MAIN_BLUE,
     justifyContent: 'center',
     alignItems: 'center',
     height: 230,
   },
-  info: {
-    backgroundColor: 'red',
-  },
 });
 
-class SecondForm extends Component {
+class SecondSignUp extends Component {
   constructor(props) {
     super(props);
   }
@@ -32,22 +29,34 @@ class SecondForm extends Component {
     noData: true,
     upload: false,
     formData: {},
-    image: `http:${this.props.route.params.data.avatar}`,
+    image: `https://metropolishypnotherapy.com/images/user_avatar_35720.png`,
   };
-  componentDidMount() {
-    // this.setState({formData: this.props.route.params.data});
-  }
+  componentDidMount() {}
 
   onSave = () => {
-    const data = {...this.state.formData, photo: this.state.photo};
+    const data = {...this.props.route.params.data};
     let dataForm = new FormData();
-    const file = {
-      name: this.state.photo.fileName,
-      type: this.state.photo.type,
-      uri: this.state.photo.uri,
-    };
-    dataForm.append('avatart', file);
-    this.props.setProfileUser(dataForm);
+    if (this.state.upload) {
+      const file = {
+        name: this.state.photo.fileName,
+        type: this.state.photo.type,
+        uri: this.state.photo.uri,
+      };
+      dataForm.append('avatart', file);
+    }
+    dataForm.append('fullName', data.fullName);
+    dataForm.append('bod', data.bod);
+    dataForm.append('gender', data.gender);
+    dataForm.append('phoneNumber', data.phoneNumber);
+    dataForm.append('address', data.fullAddress);
+    this.props.setProfileUser(dataForm, status => {
+      if (status) {
+        ToastAndroid.show('Your data is Completed!', ToastAndroid.SHORT);
+        this.props.navigation.navigate('Home');
+      } else {
+        ToastAndroid.show('Error, Please try again later', ToastAndroid.SHORT);
+      }
+    });
   };
   handleUpload = () => {
     const options = {
@@ -79,14 +88,15 @@ class SecondForm extends Component {
             }}
           />
         </View>
-        <View style={localStyle.info} />
-        <Button
-          icon={<Icon name="md-log-in" size={25} color="white" />}
-          title="Save"
-          titleStyle={{marginLeft: 10}}
-          containerStyle={{marginLeft: 130}}
-          onPress={this.onSave}
-        />
+
+        <View style={{paddingHorizontal: 120}}>
+          <Button
+            icon={<Icon name="md-log-in" size={25} color="white" />}
+            title="Upload"
+            titleStyle={{marginLeft: 10}}
+            onPress={this.onSave}
+          />
+        </View>
       </View>
     );
   }
@@ -94,4 +104,4 @@ class SecondForm extends Component {
 export default connect(
   null,
   {setProfileUser},
-)(SecondForm);
+)(SecondSignUp);

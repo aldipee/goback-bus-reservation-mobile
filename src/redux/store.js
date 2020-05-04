@@ -1,5 +1,5 @@
-import {createStore, compose, applyMiddleware} from 'redux';
-import AsyncStorage from '@react-native-community/async-storage';
+import {createStore, applyMiddleware} from 'redux';
+import AsStoreage from '@react-native-community/async-storage';
 import thunk from 'redux-thunk';
 import {persistReducer, persistStore} from 'redux-persist';
 import logger from 'redux-logger';
@@ -8,7 +8,7 @@ import rootReducer from './reducers';
 
 const config = {
   key: 'container',
-  storage: AsyncStorage,
+  storage: AsStoreage,
 };
 
 const persistedReducer = persistReducer(config, rootReducer);

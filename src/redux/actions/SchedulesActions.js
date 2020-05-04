@@ -23,7 +23,7 @@ export const setDate = selectedDate => async dispatch => {
   }
 };
 
-export const loadSchedules = query => async dispatch => {
+export const loadSchedules = (query, callback) => async dispatch => {
   try {
     setLoading();
     const urlQuery = `schedules${query}&limit=4&sortBy=time&sort=1`;
@@ -32,11 +32,16 @@ export const loadSchedules = query => async dispatch => {
     // );
 
     const res = await axios.get(API.API_URL.concat(urlQuery));
-    console.log(res);
-    dispatch({
-      type: LOAD_SCHEDULES,
-      payload: {data: res.data.data, pageInfo: res.data.page},
-    });
+    console.log(res, 'this is from Schedule');
+    if (res.data.status === 'OK') {
+      dispatch({
+        type: LOAD_SCHEDULES,
+        payload: {data: res.data.data, pageInfo: res.data.page},
+      });
+      callback(true);
+    } else {
+      callback(false);
+    }
   } catch (error) {
     console.log('DODO', error.message);
   }
@@ -46,7 +51,7 @@ export const loadRoutes = () => async dispatch => {
   try {
     setLoading();
     const res = await axios.get(API.API_URL.concat('routes?show=all'));
-    console.log(res.data.data);
+    console.log(res.data.data, 'DARI ROUTEEEEE');
     let routes = res.data.data.map((dest, index) => ({
       Id: index,
       Value: `${dest.origin_code}-${dest.destination_code}`,

@@ -11,11 +11,9 @@ class Date extends Component {
     return (
       <Calendar
         // Initially visible month. Default = Date()
-        current={'2020-04-09'}
+        current={'2020-04-13'}
         // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
-        minDate={'2020-04-09'}
-        // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
-        maxDate={'2020-09-09'}
+
         // Handler which gets executed on day press. Default = undefined
         onDayPress={day => {
           console.log('day Presss day', day);

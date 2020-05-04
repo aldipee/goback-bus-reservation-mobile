@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <BottomTab.Navigator
       tabBarOptions={{
-        activeTintColor: '#e91e63',
+        activeTintColor: '#ebaa28',
       }}>
       <BottomTab.Screen
         name="home"

@@ -67,30 +67,21 @@ class HomeSchedules extends Component {
     super(props);
     this.state = {
       data: [],
+      notFound: false,
       isLoading: true,
     };
-    this.props.loadSchedules(this.props.route.params.query);
   }
-  // fetchDataFromProps = () => {
-  //   return new Promise((resolve, reject) => {
-  //     if (this.props.data.schedulesData) {
-  //       resolve(this.props.data.schedulesData);
-  //     } else {
-  //       reject('Error Not Data found');
-  //     }
-  //   });
-  // };
-  componentDidUpdate(prevProps) {
-    if (prevProps.data.schedulesData !== this.props.data.schedulesData) {
-      const data = [...this.state.data, ...this.props.data.schedulesData];
-      this.setState({data});
-    }
-  }
+
   scheduleDetails = data => {
     this.props.navigation.navigate('ScheduleDetails', {data});
   };
   componentDidMount() {
     this.props.navigation.setOptions({title: this.props.route.params.label});
+    this.props.loadSchedules(this.props.route.params.query, status => {
+      if (!status) {
+        this.setState({notFound: true});
+      }
+    });
     setTimeout(() => {
       // const data = await this.fetchDataFromProps();
       const data = this.props.data.schedulesData;
@@ -149,11 +140,8 @@ class HomeSchedules extends Component {
     //     );
     //   });
     return (
-      // <ScrollView>
-      //   <View>{this.state.data ? items : <Text>Holla</Text>}</View>
-      // </ScrollView>
       <>
-        {this.state.data ? (
+        {!this.state.notFound ? (
           <FlatList
             onEndReached={this.onLoadMore}
             onEndReachedThreshold={0.2}
@@ -190,7 +178,19 @@ class HomeSchedules extends Component {
             )}
           />
         ) : (
-          placeholder
+          <View>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: colors.MAIN_GREY,
+                textTransform: 'uppercase',
+                marginTop: '40%',
+                marginLeft: '20%',
+              }}>
+              No Schedules Found
+            </Text>
+          </View>
         )}
       </>
     );

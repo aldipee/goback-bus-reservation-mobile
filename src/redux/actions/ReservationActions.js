@@ -21,7 +21,7 @@ export const addNewReservation = (data, callback) => async dispatch => {
     );
     if (res.data.status === 'OK') {
       Alert.alert('Reservation Success!');
-      callback('Home');
+      callback('order');
       dispatch({
         type: ADD_NEW_RESERVATIONS,
         payload: res.data.status,

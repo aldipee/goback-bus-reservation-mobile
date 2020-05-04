@@ -18,7 +18,7 @@ AsyncStorage.getItem('token', (err, result) => {
 export const setLogin = data => async dispatch => {
   try {
     const res = await axios.post(API.API_URL.concat('auth/login'), data);
-    await AsyncStorage.removeItem('token');
+
     console.log(res.data);
     if (res.data.status === 'NOTVERIFIED') {
       ToastAndroid.show(
@@ -43,7 +43,9 @@ export const setLogin = data => async dispatch => {
       }
     }
   } catch (error) {
-    console.log(error.message);
+    ToastAndroid.show('Wrong email or password', ToastAndroid.SHORT);
+    console.log('LOFFFI');
+    return false;
   }
 };
 
@@ -76,7 +78,19 @@ export const setNewUser = (data, callback) => async dispatch => {
   }
 };
 
-export const setProfileUser = data => async dispatch => {
+export const updatePictureUser = data => async dispatch => {
+  try {
+    const res = await axios.post(API.API_URL.concat('users/update'), data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const setProfileUser = (data, callback) => async dispatch => {
   try {
     setLoading();
     console.log(data);
@@ -87,66 +101,32 @@ export const setProfileUser = data => async dispatch => {
     //   phoneNumber: data.phoneNumber,
     //   address: data.fullAddress,
     // });
-    const formData = new FormData();
+    // const formData = new FormData();
     // formData.append('avatart', {
     //   uri: data.photo.uri,
     //   type: 'image/jpg',
     //   filename: data.photo.fileName,
     // });
-    let photo = {
-      uri: data.photo.data,
-      type: 'image/jpg',
-      name: data.photo.fileName,
-    };
-    const byteCharacters = Buffer.from(data.photo.data, 'base64');
 
-    console.log(data.photo, 'Here from picture');
-    formData.append('avatart', byteCharacters);
-    formData.append('fullName', data.fullName);
-    formData.append('bod', data.bod);
-    formData.append('gender', data.gender);
-    formData.append('phoneNumber', data.phoneNumber);
-    formData.append('address', data.fullAddress);
-    console.log(formData);
-    const res = await axios.post(API.API_URL.concat('users/update'), formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    // const res = await axios.post(API.API_URL.concat('users/update'), formData, {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data',
-    //   },
-    // });
-    console.log(res, 'this response from setProfileUser');
+    // const byteCharacters = Buffer.from(data.photo.data, 'base64');
+
+    // console.log(data.photo, 'Here from picture');
+    // formData.append('avatart', byteCharacters);
+    // formData.append('fullName', data.fullName);
+    // formData.append('bod', data.bod);
+    // formData.append('gender', data.gender);
+    // formData.append('phoneNumber', data.phoneNumber);
+    // formData.append('address', data.fullAddress);
+    // console.log(formData);
+    const res = await axios.post(API.API_URL.concat('users/update'), data);
     if (res.data.success) {
-      dispatch({
-        type: PROFILE_DATA_COMPLETE,
-      });
-      alert('Your data now is completed!');
+      callback(true);
     } else {
-      console.log(res);
+      callback(false);
     }
   } catch (error) {
-    console.error(error, 'aDa error');
+    console.error({error}, 'aDa error');
   }
-};
-
-const createFormData = (photo, body) => {
-  const data = new FormData();
-
-  data.append('avatart', {
-    name: photo.fileName,
-    type: 'image/jpeg',
-    uri:
-      Platform.OS === 'android' ? photo.uri : photo.uri.replace('file://', ''),
-  });
-
-  Object.keys(body).forEach(key => {
-    data.append(key, body[key]);
-  });
-
-  return data;
 };
 
 // export const setLogin = data => {

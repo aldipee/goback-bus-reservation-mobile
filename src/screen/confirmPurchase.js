@@ -186,6 +186,7 @@ class confirmPurchase extends Component {
                 />
                 <Input
                   onChangeText={text => this.setState({idNumber: text.trim()})}
+                  keyboardType="number-pad"
                   inputStyle={{fontSize: 15, paddingBottom: 5}}
                   leftIconContainerStyle={{
                     marginLeft: 0,

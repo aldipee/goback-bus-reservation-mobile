@@ -55,17 +55,20 @@ const localStyle = StyleSheet.create({
   chair: {
     backgroundColor: colors.MAIN_GREY,
     padding: 10,
-    margin: 10,
+    margin: 9,
+    borderRadius: 8,
   },
   chairSelected: {
     backgroundColor: colors.ORANGE,
     padding: 10,
-    margin: 10,
+    margin: 9,
+    borderRadius: 8,
   },
   chairNotReady: {
     backgroundColor: 'red',
     padding: 10,
-    margin: 10,
+    borderRadius: 8,
+    margin: 9,
   },
 });
 
@@ -150,23 +153,83 @@ class SelectSeat extends Component {
                 paddingRight: 0,
               }}
               bottomDivider>
-              <Text style={{marginLeft: 10}}>
-                Selected seat {this.state.seatSelected}
-              </Text>
+              <View style={{alignItems: 'center'}}>
+                <Text style={{marginLeft: 10}}>
+                  Selected seat {this.state.seatSelected}
+                </Text>
+                <View
+                  style={{
+                    marginTop: 20,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row-reverse',
+                      alignItems: 'center',
+                    }}>
+                    <View
+                      style={{
+                        backgroundColor: colors.MAIN_GREY,
+                        padding: 6,
+                        width: 30,
+                        borderRadius: 4,
+                      }}>
+                      <Icon name="user" size={20} />
+                    </View>
+                    <Text style={{marginHorizontal: 3}}>Available</Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row-reverse',
+                      alignItems: 'center',
+                    }}>
+                    <View
+                      style={{
+                        backgroundColor: colors.ORANGE,
+                        padding: 6,
+                        width: 30,
+                        borderRadius: 4,
+                      }}>
+                      <Icon name="user" size={20} />
+                    </View>
+                    <Text style={{marginHorizontal: 3}}>Selected</Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row-reverse',
+                      alignItems: 'center',
+                    }}>
+                    <View
+                      style={{
+                        backgroundColor: 'red',
+                        padding: 6,
+                        width: 30,
+                        borderRadius: 4,
+                      }}>
+                      <Icon name="user" size={20} />
+                    </View>
+                    <Text style={{marginHorizontal: 3}}>Unavaiable</Text>
+                  </View>
+                </View>
+              </View>
               <View
                 style={{
+                  marginTop: 25,
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   flexWrap: 'wrap',
                 }}>
                 {item}
               </View>
+            </Card>
+            <View style={{paddingHorizontal: 15, paddingTop: 10}}>
               <Button
                 title="Book now"
-                style={{marginVertical: 10}}
+                style={{marginVertical: 10, marginBottom: 20}}
                 onPress={this.goToConfirmPurchase}
               />
-            </Card>
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>

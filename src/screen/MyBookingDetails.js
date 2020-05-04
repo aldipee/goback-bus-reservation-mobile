@@ -7,7 +7,6 @@ import IconBarcode from 'react-native-vector-icons/FontAwesome';
 import {loadUserHistory} from '../redux/actions/UserActions';
 import {converDate, convertToRupiah, tConvert} from '../utils/convert';
 import colors from '../config/colors';
-import MyBooking from './MyBooking';
 
 const localStyle = StyleSheet.create({
   title: {

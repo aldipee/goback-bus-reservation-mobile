@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import {Card, Button, Header, Text as Txt} from 'react-native-elements';
 import PickerModal from 'react-native-picker-modal-view';
 import {convertToRupiah} from '../utils/convert';
@@ -68,12 +75,14 @@ class HomeForm extends Component {
   constructor(props) {
     super(props);
     this.props.loadRoutes();
+    this.props.loadUserData();
     this.state = {
       selectedRoute: {},
       selectedDate: '',
       selectedLabel: '',
       date: {},
       routes: [],
+      refreshing: false,
     };
   }
 
@@ -96,6 +105,19 @@ class HomeForm extends Component {
       });
     }
   }
+  onRefresh = () => {
+    this.props.loadUserData();
+    this.setState({
+      history: this.props.history,
+      isLoading: true,
+    });
+    setTimeout(() => {
+      this.setState({
+        refreshing: false,
+        isLoading: false,
+      });
+    }, 2000);
+  };
   Bo = selected => {
     console.log(selected);
     const value = selected.Value.split(/\s*\-\s*/g);
@@ -124,7 +146,13 @@ class HomeForm extends Component {
   render() {
     const {singleData} = this.props.userData;
     return (
-      <View>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+        }>
         <Header containerStyle={localStyle.headerContainer} />
         <View style={localStyle.cardContainer}>
           <Card
@@ -153,10 +181,20 @@ class HomeForm extends Component {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={{fontSize: 23, fontWeight: 'bold'}}>
-                  {convertToRupiah(singleData.balance)}
+                <Text
+                  style={{
+                    fontSize: 23,
+                    fontWeight: 'bold',
+                    color: colors.ORANGE,
+                  }}>
+                  {singleData.balance && convertToRupiah(singleData.balance)}
                 </Text>
                 <Button
+                  onPress={() =>
+                    this.props.navigation.navigate('TopUp', {
+                      balance: singleData.balance && singleData.balance,
+                    })
+                  }
                   icon={<Icon name="md-wallet" size={20} color="#fff" />}
                   title="Top up"
                 />
@@ -219,6 +257,7 @@ class HomeForm extends Component {
               </TouchableOpacity>
             </View>
             <Button
+              disabled={this.state.selectedDate === '' ? true : null}
               icon={{name: 'search', color: '#fff'}}
               backgroundColor={colors.ORANGE}
               buttonStyle={localStyle.button}
@@ -227,7 +266,7 @@ class HomeForm extends Component {
             />
           </Card>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

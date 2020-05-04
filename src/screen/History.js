@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useCallback} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {Card, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
@@ -141,7 +142,7 @@ class History extends Component {
         <Header
           placement="left"
           containerStyle={{marginTop: -25}}
-          leftComponent={{icon: 'menu', color: '#fff'}}
+          leftComponent={<Icon name="md-paper" color="#fff" size={29} />}
           centerComponent={{
             text: 'Reservations History',
             style: {color: '#fff', fontWeight: 'bold', fontSize: 16},
