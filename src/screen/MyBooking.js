@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,8 +7,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   RefreshControl,
-  Alert,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {Card, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
@@ -65,166 +65,159 @@ const localStyle = StyleSheet.create({
   },
 });
 
-class MyBooking extends Component {
-  constructor(props) {
-    super(props);
-    this.props.loadMybooking();
-  }
+const MyBooking = props => {
+  const [history, setHistory] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  state = {
-    history: [],
-    isLoading: true,
-  };
-  onRefresh = () => {
-    this.props.loadMybooking();
-    this.setState({
-      history: this.props.history,
-      isLoading: true,
-    });
+  const onRefresh = () => {
+    loadMybooking();
+    setHistory(props.history);
+    setIsLoading(true);
+
     setTimeout(() => {
-      this.setState({
-        refreshing: false,
-        isLoading: false,
-      });
+      setRefreshing(false);
+      setIsLoading(false);
     }, 2000);
   };
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        history: this.props.history,
-        isLoading: false,
-      });
-    }, 1000);
-  }
 
-  showDetails = data => {
-    this.props.navigation.navigate('MyBookingDetails', {data});
+  useFocusEffect(
+    useCallback(() => {
+      props.loadMybooking();
+    }, []),
+  );
+  useEffect(() => {
+    props.loadMybooking();
+    setTimeout(() => {
+      setHistory(props.history);
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
+  const showDetails = data => {
+    props.navigation.navigate('MyBookingDetails', {data});
   };
-  render() {
-    const placeholderItems = Array.from(Array(3).keys());
-    const placeholder = placeholderItems.map((data, index) => (
-      <Card
-        containerStyle={{
-          backgroundColor: colors.WHITE,
-          borderRadius: 3,
-          borderRightWidth: 0,
-          borderLeftWidth: 0,
-          borderTopWidth: 0,
-          borderBottomWidth: 0,
-          paddingLeft: 0,
-          paddingRight: 0,
-        }}>
-        <SkeletonPlaceholder>
-          <View style={{flexDirection: 'row'}}>
-            <View style={{width: '100%', height: 100, borderRadius: 50}} />
-            <View style={{marginLeft: 20}}>
-              <View
-                style={{marginTop: 6, width: 80, height: 20, borderRadius: 4}}
-              />
-              <View
-                style={{width: 280, height: 20, borderRadius: 4, marginTop: 10}}
-              />
-              <View
-                style={{marginTop: 10, width: 280, height: 20, borderRadius: 4}}
-              />
-              <View
-                style={{marginTop: 10, width: 280, height: 20, borderRadius: 4}}
-              />
-            </View>
-          </View>
-        </SkeletonPlaceholder>
-      </Card>
-    ));
-    return (
-      <SafeAreaView>
-        <Header
-          placement="left"
-          containerStyle={{marginTop: -25}}
-          leftComponent={{icon: 'menu', color: '#fff'}}
-          centerComponent={{
-            text: 'My Tickets',
-            style: {color: '#fff', fontWeight: 'bold', fontSize: 16},
-          }}
-        />
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh}
+
+  const placeholderItems = Array.from(Array(3).keys());
+  const placeholder = placeholderItems.map((data, index) => (
+    <Card
+      containerStyle={{
+        backgroundColor: colors.WHITE,
+        borderRadius: 3,
+        borderRightWidth: 0,
+        borderLeftWidth: 0,
+        borderTopWidth: 0,
+        borderBottomWidth: 0,
+        paddingLeft: 0,
+        paddingRight: 0,
+      }}>
+      <SkeletonPlaceholder>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{width: '100%', height: 100, borderRadius: 50}} />
+          <View style={{marginLeft: 20}}>
+            <View
+              style={{marginTop: 6, width: 80, height: 20, borderRadius: 4}}
             />
-          }>
-          {this.state.isLoading ? (
-            placeholder
-          ) : (
-            <View>
-              {this.state.history ? (
-                <View>
-                  {this.state.history &&
-                    this.state.history.map((data, index) => (
-                      <TouchableOpacity onPress={() => this.showDetails(data)}>
-                        <Card
-                          containerStyle={{
-                            backgroundColor: colors.WHITE,
-                            borderRadius: 3,
-                            borderRightWidth: 0,
-                            borderLeftWidth: 0,
-                            borderTopWidth: 0,
-                            borderBottomWidth: 0,
-                            paddingLeft: 0,
-                            paddingRight: 0,
-                          }}
-                          bottomDivider>
-                          <Text style={localStyle.date}>
-                            {converDate(data.schedule_date)}
+            <View
+              style={{width: 280, height: 20, borderRadius: 4, marginTop: 10}}
+            />
+            <View
+              style={{marginTop: 10, width: 280, height: 20, borderRadius: 4}}
+            />
+            <View
+              style={{marginTop: 10, width: 280, height: 20, borderRadius: 4}}
+            />
+          </View>
+        </View>
+      </SkeletonPlaceholder>
+    </Card>
+  ));
+  return (
+    <SafeAreaView>
+      <Header
+        placement="left"
+        containerStyle={{marginTop: -25}}
+        leftComponent={{icon: 'menu', color: '#fff'}}
+        centerComponent={{
+          text: 'My Tickets',
+          style: {color: '#fff', fontWeight: 'bold', fontSize: 16},
+        }}
+      />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
+        {isLoading ? (
+          placeholder
+        ) : (
+          <View>
+            {history ? (
+              <View>
+                {history &&
+                  history.map((data, index) => (
+                    <TouchableOpacity onPress={() => showDetails(data)}>
+                      <Card
+                        containerStyle={{
+                          backgroundColor: colors.WHITE,
+                          borderRadius: 3,
+                          borderRightWidth: 0,
+                          borderLeftWidth: 0,
+                          borderTopWidth: 0,
+                          borderBottomWidth: 0,
+                          paddingLeft: 0,
+                          paddingRight: 0,
+                        }}
+                        bottomDivider>
+                        <Text style={localStyle.date}>
+                          {converDate(data.schedule_date)}
+                        </Text>
+                        <View style={localStyle.fixJustify}>
+                          <Text style={localStyle.title}>
+                            Booking ID #{data.reservation_id}
                           </Text>
-                          <View style={localStyle.fixJustify}>
-                            <Text style={localStyle.title}>
-                              Booking ID #{data.reservation_id}
-                            </Text>
-                            <Text style={localStyle.price}>
-                              {convertToRupiah(data.totalPrice)}
-                            </Text>
-                          </View>
-                          <View style={localStyle.fix}>
-                            <Icon
-                              name="md-bus"
-                              size={28}
-                              color={colors.ORANGE}
-                              style={localStyle.icon}
-                            />
-                            <Text style={localStyle.route}>
-                              {data.origin} - {data.destination}
-                            </Text>
-                          </View>
-                          <View>
-                            <Text style={localStyle.status}>
-                              Wait to check-in
-                            </Text>
-                          </View>
-                        </Card>
-                      </TouchableOpacity>
-                    ))}
-                </View>
-              ) : (
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    color: colors.MAIN_GREY,
-                    textTransform: 'uppercase',
-                    marginTop: '40%',
-                    marginLeft: '20%',
-                  }}>
-                  There is no activity
-                </Text>
-              )}
-            </View>
-          )}
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
-}
+                          <Text style={localStyle.price}>
+                            {convertToRupiah(data.totalPrice)}
+                          </Text>
+                        </View>
+                        <View style={localStyle.fix}>
+                          <Icon
+                            name="md-bus"
+                            size={28}
+                            color={colors.ORANGE}
+                            style={localStyle.icon}
+                          />
+                          <Text style={localStyle.route}>
+                            {data.origin} - {data.destination}
+                          </Text>
+                        </View>
+                        <View>
+                          <Text style={localStyle.status}>
+                            Wait to check-in
+                          </Text>
+                        </View>
+                      </Card>
+                    </TouchableOpacity>
+                  ))}
+              </View>
+            ) : (
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: colors.MAIN_GREY,
+                  textTransform: 'uppercase',
+                  marginTop: '40%',
+                  marginLeft: '20%',
+                }}>
+                There is no activity
+              </Text>
+            )}
+          </View>
+        )}
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
 const mapStateToProps = state => {
   return {

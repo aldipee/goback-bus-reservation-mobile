@@ -17,6 +17,7 @@ function ProfileScreen(props) {
   useFocusEffect(
     useCallback(() => {
       // props.getProfileDetail();
+      props.loadUserData();
       async function getData() {
         const data = fetchData();
         return data;
