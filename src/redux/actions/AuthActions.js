@@ -121,6 +121,9 @@ export const setProfileUser = (data, callback) => async dispatch => {
     const res = await axios.post(API.API_URL.concat('users/update'), data);
     if (res.data.success) {
       callback(true);
+      dispatch({
+        type: PROFILE_DATA_COMPLETE,
+      });
     } else {
       callback(false);
     }

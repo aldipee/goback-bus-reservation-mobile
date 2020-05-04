@@ -7,9 +7,9 @@ import {connect} from 'react-redux';
 import {setLogout} from '../redux/actions/AuthActions';
 import {loadUserData} from '../redux/actions/UserActions';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-
 import myColors from '../config/colors';
 import {convertToRupiah} from '../utils/convert';
+import {API} from '../config/server';
 
 function ProfileScreen(props) {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,28 +18,13 @@ function ProfileScreen(props) {
     useCallback(() => {
       // props.getProfileDetail();
       props.loadUserData();
-      async function getData() {
-        const data = fetchData();
-        return data;
-      }
-      getData().then(data => {
-        console.log(data);
-        setProfileData(data);
-        setIsLoading(false);
-      });
+      setProfileData(props.data);
+      setIsLoading(false);
     }, []),
   );
   useEffect(() => {
     props.loadUserData();
   }, []);
-
-  const fetchData = () => {
-    return new Promise((resolve, reject) => {
-      if (props.data.token !== '') {
-        resolve(props.data);
-      }
-    });
-  };
 
   const onLogout = status => {
     props.setLogout(data => {
@@ -68,8 +53,7 @@ function ProfileScreen(props) {
               rounded
               size="large"
               source={{
-                uri:
-                  'http://localhost:5001/public/users/1584947420598-ETdKZfYU4AEh_Of.jpg',
+                uri: `http:${profileData.singleData.avatar}`,
               }}
               onPress={() =>
                 props.navigation.navigate('UploadImage', {
@@ -121,8 +105,8 @@ function ProfileScreen(props) {
                           color: myColors.BLACK,
                           fontWeight: 'bold',
                         }}>
-                        {profileData.singleData.balance &&
-                          convertToRupiah(profileData.singleData.balance)}
+                        {props.data.singleData.balance &&
+                          convertToRupiah(props.data.singleData.balance)}
                       </Text>
                     </View>
                   </View>

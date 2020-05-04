@@ -147,8 +147,21 @@ const History = props => {
           placeholder
         ) : (
           <View>
-            {history &&
-              history.map((data, index) => (
+            {props.history === false && (
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: colors.MAIN_GREY,
+                  textTransform: 'uppercase',
+                  marginTop: '40%',
+                  marginLeft: '20%',
+                }}>
+                there's no activity
+              </Text>
+            )}
+            {props.history &&
+              props.history.map((data, index) => (
                 <TouchableOpacity onPress={() => showDetails(data)}>
                   <Card
                     containerStyle={{

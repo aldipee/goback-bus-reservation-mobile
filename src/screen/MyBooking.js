@@ -84,6 +84,7 @@ const MyBooking = props => {
   useFocusEffect(
     useCallback(() => {
       props.loadMybooking();
+      setHistory(props.history);
     }, []),
   );
   useEffect(() => {
@@ -143,6 +144,19 @@ const MyBooking = props => {
           style: {color: '#fff', fontWeight: 'bold', fontSize: 16},
         }}
       />
+      {props.history === false && (
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: colors.MAIN_GREY,
+            textTransform: 'uppercase',
+            marginTop: '40%',
+            marginLeft: '20%',
+          }}>
+          there's no activity
+        </Text>
+      )}
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -151,10 +165,10 @@ const MyBooking = props => {
           placeholder
         ) : (
           <View>
-            {history ? (
+            {props.history ? (
               <View>
-                {history &&
-                  history.map((data, index) => (
+                {props.history &&
+                  props.history.map((data, index) => (
                     <TouchableOpacity onPress={() => showDetails(data)}>
                       <Card
                         containerStyle={{
@@ -199,19 +213,7 @@ const MyBooking = props => {
                     </TouchableOpacity>
                   ))}
               </View>
-            ) : (
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                  color: colors.MAIN_GREY,
-                  textTransform: 'uppercase',
-                  marginTop: '40%',
-                  marginLeft: '20%',
-                }}>
-                There is no activity
-              </Text>
-            )}
+            ) : null}
           </View>
         )}
       </ScrollView>
