@@ -1,4 +1,4 @@
-package com.awesomeproject;
+package com.goback;
 
 import com.facebook.react.ReactActivity;
  import com.facebook.react.ReactRootView;
@@ -20,7 +20,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "AwesomeProject";
+    return "GoBack";
   }
     @Override
   protected ReactActivityDelegate createReactActivityDelegate() {

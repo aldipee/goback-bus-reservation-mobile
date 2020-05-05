@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {Avatar, Button} from 'react-native-elements';
 import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
@@ -101,7 +101,14 @@ class SecondSignUp extends Component {
             title="Upload"
             titleStyle={{marginLeft: 10}}
             onPress={this.onSave}
+            disabled={this.state.upload ? null : true}
           />
+          <TouchableOpacity onPress={this.onSave}>
+            <Text
+              style={{alignSelf: 'center', marginTop: 10, fontWeight: 'bold'}}>
+              Skip
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     );

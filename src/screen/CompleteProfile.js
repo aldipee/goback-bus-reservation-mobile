@@ -19,10 +19,27 @@ class CompleteProfile extends Component {
     fullAddress: '',
     date: new Date(),
     showDate: false,
+    fullNameError: null,
+    phoneNumberError: null,
   };
   logout = () => {
     this.props.setLogout();
     this.props.navigation.navigate('Home');
+  };
+  validate = (field, text) => {
+    if (field === 'fullName') {
+      if (/^[a-zA-Z]+(\s[a-zA-Z]+)?$/.test(text)) {
+        this.setState({fullName: text.trim(), fullNameError: null});
+      } else {
+        this.setState({fullNameError: 'Invalid name'});
+      }
+    } else if (field === 'phoneNumber') {
+      if (/^(^\+62\s?|^0)(\d{3,4}?){2}\d{3,4}$/.test(text)) {
+        this.setState({phoneNumber: text.trim(), phoneNumberError: null});
+      } else {
+        this.setState({phoneNumberError: 'Invalid Phone Number'});
+      }
+    }
   };
   next = () => {
     this.props.navigation.navigate('SecondForm', {data: this.state});
@@ -59,8 +76,11 @@ class CompleteProfile extends Component {
           </View>
           <Card>
             <Input
-              onChangeText={text => this.setState({fullName: text.trim()})}
+              onChangeText={text => this.validate('fullName', text)}
               inputStyle={{fontSize: 15, paddingBottom: 5}}
+              errorMessage={
+                this.state.fullNameError ? this.state.fullNameError : null
+              }
               leftIconContainerStyle={{
                 marginLeft: 0,
                 marginRight: 10,
@@ -118,8 +138,11 @@ class CompleteProfile extends Component {
             </Picker>
 
             <Input
-              onChangeText={text => this.setState({phoneNumber: text.trim()})}
+              onChangeText={text => this.validate('phoneNumber', text)}
               inputStyle={{fontSize: 15, paddingBottom: 5}}
+              errorMessage={
+                this.state.phoneNumberError ? this.state.phoneNumberError : null
+              }
               leftIconContainerStyle={{
                 marginLeft: 0,
                 marginRight: 10,
@@ -161,6 +184,7 @@ class CompleteProfile extends Component {
               <Button
                 icon={<Icon name="md-log-in" size={25} color="white" />}
                 title="Next"
+                disabled={this.state.fullAddress === '' ? true : null}
                 titleStyle={{marginLeft: 10}}
                 containerStyle={{marginLeft: 130}}
                 onPress={this.next}

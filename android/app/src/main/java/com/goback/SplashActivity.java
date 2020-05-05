@@ -1,4 +1,4 @@
-package com.awesomeproject; // Change this to your package name.
+package com.goback; // Change this to your package name.
 
 import android.content.Intent;
 import android.os.Bundle;
