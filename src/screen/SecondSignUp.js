@@ -68,8 +68,14 @@ class SecondSignUp extends Component {
       },
     };
     ImagePicker.launchImageLibrary(options, response => {
+      console.log(response.fileSize);
+      console.log(response.fileSize > 1048576, 'INI FILE SIZE');
       if (response.uri) {
-        this.setState({photo: response, image: response.uri, upload: true});
+        if (response.fileSize > 1048576) {
+          ToastAndroid.show('Maximum Filesize 1 mb', ToastAndroid.SHORT);
+        } else {
+          this.setState({photo: response, image: response.uri, upload: true});
+        }
       }
     });
   };

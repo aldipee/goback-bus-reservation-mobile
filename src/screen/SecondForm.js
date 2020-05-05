@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, ToastAndroid} from 'react-native';
 import {Avatar, Button} from 'react-native-elements';
 import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {setProfileUser} from '../redux/actions/AuthActions';
+import {setProfileUser, updatePicture} from '../redux/actions/AuthActions';
 import colors from '../config/colors';
 
 const localStyle = StyleSheet.create({
@@ -39,7 +39,6 @@ class SecondForm extends Component {
   }
 
   onSave = () => {
-    const data = {...this.state.formData, photo: this.state.photo};
     let dataForm = new FormData();
     const file = {
       name: this.state.photo.fileName,
@@ -47,7 +46,15 @@ class SecondForm extends Component {
       uri: this.state.photo.uri,
     };
     dataForm.append('avatart', file);
-    this.props.setProfileUser(dataForm);
+    this.props.updatePicture(dataForm, status => {
+      console.log(status, 'ijasdjakjalsd');
+      if (status) {
+        ToastAndroid.show('Your picture updated!', ToastAndroid.SHORT);
+        this.props.navigation.goBack();
+      } else {
+        ToastAndroid.show('Error, Please try again later', ToastAndroid.SHORT);
+      }
+    });
   };
   handleUpload = () => {
     const options = {
@@ -93,5 +100,5 @@ class SecondForm extends Component {
 }
 export default connect(
   null,
-  {setProfileUser},
+  {setProfileUser, updatePicture},
 )(SecondForm);

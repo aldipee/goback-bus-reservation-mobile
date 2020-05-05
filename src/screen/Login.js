@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import Button from '../components/Button';
 import FormTextInput from '../components/TextInput';
@@ -37,45 +37,69 @@ class Login extends Component {
   render() {
     return (
       <>
-        <Text>Welcome back!</Text>
-        <View style={styles.parent}>
-          <View style={localStyles.formContainer}>
-            <View style={localStyles.con}>
-              <Icon
-                name="user"
-                color={colors.SECOND_BLUE}
-                size={23}
-                style={localStyles.icon}
-              />
-              <FormTextInput
-                onChangeText={text => this.setState({username: text})}
-                placeholder={strings.EMAIL_PLACEHOLDER}
-              />
-            </View>
-            <View style={localStyles.con}>
-              <Icon
-                name="lock"
-                color={colors.SECOND_BLUE}
-                size={23}
-                style={localStyles.icon}
-              />
-              <FormTextInput
-                onChangeText={text => this.setState({password: text})}
-                placeholder={strings.PASSWORD_PLACEHOLDER}
-              />
-            </View>
-            <View>
-              <Text style={localStyles.forgot}>Forgot password?</Text>
-            </View>
-            <Button
-              label={strings.LOGIN}
-              buttonType="login"
-              onPress={this.toHome}
-            />
-            <Text style={localStyles.or}>Don't have an account yet?</Text>
-            <Button label={strings.REGISTER} onPress={this.toRegister} />
+        <ScrollView>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              paddingHorizontal: 20,
+              marginTop: 50,
+            }}>
+            <Text
+              style={{fontSize: 26, paddingHorizontal: 10, fontWeight: 'bold'}}>
+              Welcome Back!
+            </Text>
+            <Text
+              style={{
+                fontSize: 19,
+                paddingHorizontal: 10,
+                color: '#d1d1d1',
+              }}>
+              Let's login to see the best trip
+            </Text>
           </View>
-        </View>
+
+          <View style={styles.parent}>
+            <View style={localStyles.formContainer}>
+              <View style={localStyles.con}>
+                <Icon
+                  name="user"
+                  color={colors.SECOND_BLUE}
+                  size={23}
+                  style={localStyles.icon}
+                />
+                <FormTextInput
+                  onChangeText={text => this.setState({username: text})}
+                  placeholder={strings.EMAIL_PLACEHOLDER}
+                />
+              </View>
+              <View style={localStyles.con}>
+                <Icon
+                  name="lock"
+                  color={colors.SECOND_BLUE}
+                  size={23}
+                  style={localStyles.icon}
+                />
+                <FormTextInput
+                  secureTextEntry={true}
+                  onChangeText={text => this.setState({password: text})}
+                  placeholder={strings.PASSWORD_PLACEHOLDER}
+                />
+              </View>
+              <View>
+                <Text style={localStyles.forgot}>Forgot password?</Text>
+              </View>
+              <Button
+                label={strings.LOGIN}
+                buttonType="login"
+                onPress={this.toHome}
+              />
+              <Text style={localStyles.or}>Don't have an account yet?</Text>
+              <Button label={strings.REGISTER} onPress={this.toRegister} />
+            </View>
+          </View>
+        </ScrollView>
       </>
     );
   }
@@ -85,7 +109,7 @@ const localStyles = StyleSheet.create({
   formContainer: {
     flex: 1,
     width: '90%',
-    marginTop: '50%',
+    marginTop: '20%',
   },
   forgot: {
     marginLeft: 210,

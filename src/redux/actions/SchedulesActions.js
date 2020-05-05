@@ -8,9 +8,9 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import {API} from '../../config/server';
 
-AsyncStorage.getItem('token', (err, result) => {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${result}`;
-});
+// AsyncStorage.getItem('token', (err, result) => {
+//   axios.defaults.headers.common['Authorization'] = `Bearer ${result}`;
+// });
 
 export const setDate = selectedDate => async dispatch => {
   try {
@@ -30,8 +30,10 @@ export const loadSchedules = (query, callback) => async dispatch => {
     // const query = API.API_URL.concat(
     //   'schedules?sortBy=time&date=2020-04-04&sort=1&origin=BDG&destination=SMG',
     // );
-
-    const res = await axios.get(API.API_URL.concat(urlQuery));
+    const token = await AsyncStorage.getItem('token');
+    const res = await axios.get(API.API_URL.concat(urlQuery), {
+      headers: {Authorization: `Bearer ${token}`},
+    });
     console.log(res, 'this is from Schedule');
     if (res.data.status === 'OK') {
       dispatch({
@@ -50,7 +52,10 @@ export const loadSchedules = (query, callback) => async dispatch => {
 export const loadRoutes = () => async dispatch => {
   try {
     setLoading();
-    const res = await axios.get(API.API_URL.concat('routes?show=all'));
+    const token = await AsyncStorage.getItem('token');
+    const res = await axios.get(API.API_URL.concat('routes?show=all'), {
+      headers: {Authorization: `Bearer ${token}`},
+    });
     console.log(res.data.data, 'DARI ROUTEEEEE');
     let routes = res.data.data.map((dest, index) => ({
       Id: index,

@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Alert} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+} from 'react-native';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import strings from '../config/strings';
@@ -60,59 +67,85 @@ class SignUp extends Component {
   render() {
     return (
       <>
-        <Text>Welcome back!</Text>
-        <View style={styles.parent}>
-          <View style={localStyles.formContainer}>
-            <View style={localStyles.con}>
-              <Input
-                autoFocus={true}
-                onBlur={() => this.checkUser()}
-                placeholder="Pick Username"
-                label="Username"
-                icon="user"
-                onChangeText={text => this.setState({username: text.trim()})}
-                errorMessage={this.state.error ? this.state.error : false}
-              />
-              <Input
-                placeholder={strings.EMAIL_PLACEHOLDER}
-                label="Email"
-                icon="mail"
-                onChangeText={text => this.setState({email: text.trim()})}
-                onBlur={() => this.checkemail()}
-                errorMessage={
-                  !this.state.emailError ? false : 'Email not valid'
-                }
-              />
-              <Input
-                placeholder={strings.PASSWORD_PLACEHOLDER}
-                label="Password "
-                icon="lock"
-                rightIcon="eye"
-                rightIconContainerStyle={{marginRight: 12}}
-                onChangeText={text => this.setState({password: text.trim()})}
-              />
-              <Input
-                placeholder={strings.CONFIRM_PASSWORD}
-                label="Confirm password "
-                icon="lock"
-                rightIcon="eye"
-                rightIconContainerStyle={{marginRight: 12}}
-                onChangeText={text =>
-                  this.setState({confirmPassword: text.trim()})
-                }
-              />
-            </View>
-            <Button
-              label={strings.SIGN_UP}
-              buttonType="login"
-              onPress={this.SignUp}
-            />
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('LoginScreen')}>
-              <Text style={localStyles.or}>Already have a account? Login</Text>
-            </TouchableOpacity>
+        <ScrollView>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              paddingHorizontal: 20,
+              marginTop: 50,
+            }}>
+            <Text
+              style={{fontSize: 26, paddingHorizontal: 10, fontWeight: 'bold'}}>
+              Let's Join Us!
+            </Text>
+            <Text
+              style={{
+                fontSize: 19,
+                paddingHorizontal: 10,
+                color: '#d1d1d1',
+              }}>
+              We always try to provide the best for you
+            </Text>
           </View>
-        </View>
+          <View style={styles.parent}>
+            <View style={localStyles.formContainer}>
+              <View style={localStyles.con}>
+                <Input
+                  autoFocus={true}
+                  onBlur={() => this.checkUser()}
+                  placeholder="Pick Username"
+                  label="Username"
+                  icon="user"
+                  onChangeText={text => this.setState({username: text.trim()})}
+                  errorMessage={this.state.error ? this.state.error : false}
+                />
+                <Input
+                  placeholder={strings.EMAIL_PLACEHOLDER}
+                  label="Email"
+                  icon="mail"
+                  onChangeText={text => this.setState({email: text.trim()})}
+                  onBlur={() => this.checkemail()}
+                  errorMessage={
+                    !this.state.emailError ? false : 'Email not valid'
+                  }
+                />
+                <Input
+                  placeholder={strings.PASSWORD_PLACEHOLDER}
+                  secureTextEntry={true}
+                  label="Password "
+                  icon="lock"
+                  rightIcon="eye"
+                  rightIconContainerStyle={{marginRight: 12}}
+                  onChangeText={text => this.setState({password: text.trim()})}
+                />
+                <Input
+                  placeholder={strings.CONFIRM_PASSWORD}
+                  secureTextEntry={true}
+                  label="Confirm password "
+                  icon="lock"
+                  rightIcon="eye"
+                  rightIconContainerStyle={{marginRight: 12}}
+                  onChangeText={text =>
+                    this.setState({confirmPassword: text.trim()})
+                  }
+                />
+              </View>
+              <Button
+                label={strings.SIGN_UP}
+                buttonType="login"
+                onPress={this.SignUp}
+              />
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('LoginScreen')}>
+                <Text style={localStyles.or}>
+                  Already have a account? Login
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
       </>
     );
   }
@@ -122,7 +155,7 @@ const localStyles = StyleSheet.create({
   formContainer: {
     flex: 1,
     width: '90%',
-    marginTop: '20%',
+    marginTop: '3%',
   },
   forgot: {
     marginLeft: 210,

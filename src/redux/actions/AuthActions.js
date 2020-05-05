@@ -10,10 +10,9 @@ import {API} from '../../config/server';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import {ToastAndroid, Platform} from 'react-native';
-import {Buffer} from 'buffer';
-AsyncStorage.getItem('token', (err, result) => {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${result}`;
-});
+// AsyncStorage.getItem('token', (err, result) => {
+//   axios.defaults.headers.common['Authorization'] = `Bearer ${result}`;
+// });
 
 export const setLogin = data => async dispatch => {
   try {
@@ -62,7 +61,10 @@ export const setLogout = () => {
 export const setNewUser = (data, callback) => async dispatch => {
   try {
     setLoading();
-    const res = await axios.post(API.API_URL.concat('auth/register'), data);
+    const token = await AsyncStorage.getItem('token');
+    const res = await axios.post(API.API_URL.concat('auth/register'), data, {
+      headers: {Authorization: `Bearer ${token}`},
+    });
     console.log(res);
     if (res.data) {
       callback(true);
@@ -80,9 +82,11 @@ export const setNewUser = (data, callback) => async dispatch => {
 
 export const updatePictureUser = data => async dispatch => {
   try {
+    const token = await AsyncStorage.getItem('token');
     const res = await axios.post(API.API_URL.concat('users/update'), data, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
       },
     });
   } catch (error) {
@@ -118,7 +122,10 @@ export const setProfileUser = (data, callback) => async dispatch => {
     // formData.append('phoneNumber', data.phoneNumber);
     // formData.append('address', data.fullAddress);
     // console.log(formData);
-    const res = await axios.post(API.API_URL.concat('users/update'), data);
+    const token = await AsyncStorage.getItem('token');
+    const res = await axios.post(API.API_URL.concat('users/update'), data, {
+      headers: {Authorization: `Bearer ${token}`},
+    });
     if (res.data.success) {
       callback(true);
       dispatch({
@@ -132,20 +139,31 @@ export const setProfileUser = (data, callback) => async dispatch => {
   }
 };
 
-// export const setLogin = data => {
-//   axios
-//     .post(API.API_URL.concat('auth/login'), data)
-//     .then(res => {
-//       console.log(res);
-//       return {
-//         type: SET_LOGIN,
-//         payload: res.data,
-//       };
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
+export const updatePicture = (data, callback) => async dispatch => {
+  try {
+    setLoading();
+    console.log(data);
+    const token = await AsyncStorage.getItem('token');
+    const res = await axios.put(
+      API.API_URL.concat('users/update-picture'),
+      data,
+      {
+        headers: {Authorization: `Bearer ${token}`},
+      },
+    );
+    console.log(res, ' ini dadadad');
+    if (res.data.success) {
+      callback(true);
+      dispatch({
+        type: PROFILE_DATA_COMPLETE,
+      });
+    } else {
+      callback(false);
+    }
+  } catch (error) {
+    console.error({error}, 'aDa error');
+  }
+};
 
 export const setLoading = () => {
   return {

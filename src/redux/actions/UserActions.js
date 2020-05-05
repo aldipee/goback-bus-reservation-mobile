@@ -1,7 +1,6 @@
 import {
   USER_HISTORY,
   USER_PROFILE_DATA,
-  ERROR_USER,
   MY_BOOKING,
   SET_LOADING_USER_DATA,
   DATA_NOT_FOUND_HISTORY_USER,
@@ -9,10 +8,9 @@ import {
 import {API} from '../../config/server';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import {ToastAndroid, Platform} from 'react-native';
-AsyncStorage.getItem('token', (err, result) => {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${result}`;
-});
+// AsyncStorage.getItem('token', (err, result) => {
+//   axios.defaults.headers.common['Authorization'] = `Bearer ${result}`;
+// });
 const setToken = () => async dispatch => {
   try {
     const result = await AsyncStorage.getItem('token');
@@ -26,7 +24,10 @@ const setToken = () => async dispatch => {
 export const loadUserData = () => async dispatch => {
   try {
     setLoading();
-    const res = await axios.get(API.API_URL.concat('users/profile'));
+    const token = await AsyncStorage.getItem('token');
+    const res = await axios.get(API.API_URL.concat('users/profile'), {
+      headers: {Authorization: `Bearer ${token}`},
+    });
     if (res.data.status) {
       dispatch({
         type: USER_PROFILE_DATA,
@@ -44,8 +45,11 @@ export const loadUserHistory = () => async dispatch => {
   try {
     setToken();
     setLoading();
+    const token = await AsyncStorage.getItem('token');
     const query = 'users/history';
-    const res = await axios.get(API.API_URL.concat(query));
+    const res = await axios.get(API.API_URL.concat(query), {
+      headers: {Authorization: `Bearer ${token}`},
+    });
     if (res.data.status === 'OK') {
       dispatch({
         type: USER_HISTORY,
@@ -64,8 +68,11 @@ export const loadMybooking = () => async dispatch => {
   try {
     setToken();
     setLoading();
+    const token = await AsyncStorage.getItem('token');
     const query = 'users/history';
-    const res = await axios.get(API.API_URL.concat(query));
+    const res = await axios.get(API.API_URL.concat(query), {
+      headers: {Authorization: `Bearer ${token}`},
+    });
     if (res.data.status === 'OK') {
       dispatch({
         type: MY_BOOKING,
