@@ -25,7 +25,7 @@
 
 ## Download the APK
 
-You can Download the APK [`here`](https://firebasestorage.googleapis.com/v0/b/aloneapp-d893b.appspot.com/o/apk%2Fgayain.apk?alt=media&token=ea8e20dd-bef8-4a3d-9b06-9a9868487f47)
+You can Download the APK [`here`](https://drive.google.com/open?id=18B69VArnenTGwl-IF6hhhPlqs2fHYzJL)
 
 ## Screenshot from the App
 
